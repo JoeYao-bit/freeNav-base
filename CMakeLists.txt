@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(freeNav)
+project(freeNav-base)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 enable_testing()
 # Check C++11 or C++0x support

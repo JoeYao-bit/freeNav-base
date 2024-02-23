@@ -1,3 +1,3 @@
 # freeNav-base
 
-data structure, and tools used in the freeNav project 
+commom data structure, dependencies and tools used in the freeNav project 

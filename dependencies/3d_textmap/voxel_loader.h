@@ -5,8 +5,8 @@
 #ifndef FREENAV_VOXEL_LOADER_H
 #define FREENAV_VOXEL_LOADER_H
 
-#include "basic_elements/point.h"
-#include "dependencies/environment.h"
+#include "../../basic_elements/point.h"
+#include "../environment.h"
 #include <iostream>
 #include <fstream>
 #include <limits>

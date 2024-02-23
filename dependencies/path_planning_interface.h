@@ -5,7 +5,7 @@
 #ifndef FREENAV_PATH_PLANNING_INTERFACE_H
 #define FREENAV_PATH_PLANNING_INTERFACE_H
 
-#include "basic_elements/point.h"
+#include "../basic_elements/point.h"
 
 namespace freeNav {
 

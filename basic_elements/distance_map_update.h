@@ -5,7 +5,7 @@
 #ifndef FREENAV_DISTANCE_MAP_UPDATE_H
 #define FREENAV_DISTANCE_MAP_UPDATE_H
 
-#include "point.h"
+#include "../basic_elements/point.h"
 
 namespace freeNav {
 

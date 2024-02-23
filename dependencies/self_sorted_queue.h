@@ -5,7 +5,7 @@
 #ifndef FREENAV_SELF_SORTED_QUEUE_H
 #define FREENAV_SELF_SORTED_QUEUE_H
 
-#include "basic_elements/point.h"
+#include "../basic_elements/point.h"
 #include <vector>
 #include <assert.h>
 #include <memory>

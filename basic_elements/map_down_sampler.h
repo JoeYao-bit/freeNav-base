@@ -5,7 +5,7 @@
 #ifndef FREENAV_MAP_DOWN_SAMPLER_H
 #define FREENAV_MAP_DOWN_SAMPLER_H
 
-#include "point.h"
+#include "../basic_elements/point.h"
 
 namespace freeNav {
 

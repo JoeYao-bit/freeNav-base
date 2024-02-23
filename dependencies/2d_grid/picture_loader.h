@@ -11,7 +11,7 @@
 #include "opencv2/imgproc/imgproc.hpp"//draw a line
 #include "opencv2/opencv.hpp"
 #include "basic_elements/point.h"
-#include "dependencies/environment.h"
+#include "../environment.h"
 
 namespace freeNav {
 

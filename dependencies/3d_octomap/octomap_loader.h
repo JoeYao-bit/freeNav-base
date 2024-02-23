@@ -7,8 +7,8 @@
 
 #include <octomap/octomap.h>
 #include <octomap/ColorOcTree.h>
-#include "basic_elements/point.h"
-#include "dependencies/environment.h"
+#include "../../basic_elements/point.h"
+#include "../environment.h"
 
 
 class OctoMapLoader {

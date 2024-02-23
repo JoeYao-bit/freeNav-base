@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(freeNav-base)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 enable_testing()
 # Check C++11 or C++0x support
 include(CheckCXXCompilerFlag)
@@ -118,7 +118,7 @@ IF(ENABLE_LOG)
 ENDIF(ENABLE_LOG)
 
 include_directories(
-  SYSTEM
+  #SYSTEM
   ${CSPARSE_INCLUDE_DIR}
   ${SUITESPARSE_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
@@ -174,7 +174,7 @@ aux_source_directory(dependencies/massive_scene_loader  mass_src)
 #add_library(harrt_src_lib ${harrt_src})
 #target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})
 
-add_library(freeNav ${3d_vis_src} ${canvas_src} ${qt_src}
+add_library(freeNav-base ${3d_vis_src} ${canvas_src} ${qt_src}
                     ${basic_src}
         ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src}
          )
@@ -205,26 +205,26 @@ set(EXTERNAL_LIBS
         ${argparse_lib}
         )
 
-target_link_libraries(freeNav ${EXTERNAL_LIBS})
-
+target_link_libraries(freeNav-base ${EXTERNAL_LIBS})
+#target_include_directories(freeNav-base PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(test_canvas test/test_canvas.cpp)
-target_link_libraries(test_canvas freeNav)
+target_link_libraries(test_canvas freeNav-base)
 
 add_executable(test_3d_viewer test/test_3d_viewer.cpp)
-target_link_libraries(test_3d_viewer freeNav)
+target_link_libraries(test_3d_viewer freeNav-base)
 
 add_executable(test_opengl test/test_opengl.cpp)
-target_link_libraries(test_opengl freeNav)
+target_link_libraries(test_opengl freeNav-base)
 
 add_executable(test_auto_sorted_queue test/test_auto_sorted_queue.cpp)
-target_link_libraries(test_auto_sorted_queue freeNav)
+target_link_libraries(test_auto_sorted_queue freeNav-base)
 
 add_executable(directory_detect_test test/test_directory_detect.cpp)
-target_link_libraries(directory_detect_test freeNav)
+target_link_libraries(directory_detect_test freeNav-base)
 
 add_executable(QT_gui test/test_qt_gui.cpp visualization/qt_gui/resources/images.qrc)
-target_link_libraries(QT_gui freeNav ${EXTERNAL_LIBS})
+target_link_libraries(QT_gui freeNav-base ${EXTERNAL_LIBS})
 
 
 

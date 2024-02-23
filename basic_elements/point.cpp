@@ -2,7 +2,7 @@
 // Created by yaozhuo on 2022/1/2.
 //
 
-#include "point.h"
+#include "../basic_elements/point.h"
 
 namespace freeNav {
 

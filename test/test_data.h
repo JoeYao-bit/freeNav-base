@@ -2,13 +2,12 @@
 // Created by yaozhuo on 2022/9/6.
 //
 
-#ifndef FREENAV_TEST_DATA_H
-#define FREENAV_TEST_DATA_H
+#ifndef FREENAV_BASE_TEST_DATA_H
+#define FREENAV_BASE_TEST_DATA_H
 #include <iostream>
 #include <map>
-#include "basic_elements/point.h"
-#include "dependencies/massive_test_interfaces.h"
-
+#include "../basic_elements/point.h"
+#include "../dependencies/massive_test_interfaces.h"
 
 namespace freeNav {
 

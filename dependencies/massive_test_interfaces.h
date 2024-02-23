@@ -9,9 +9,9 @@
 #include "basic_elements/point.h"
 
 #include "path_planning_interface.h"
-#include "massive_scene_loader/ScenarioLoader2D.h"
-#include "massive_scene_loader/ScenarioLoader3D.h"
-#include "dependencies/random_map_generator.h"
+#include "./massive_scene_loader/ScenarioLoader2D.h"
+#include "./massive_scene_loader/ScenarioLoader3D.h"
+#include "./random_map_generator.h"
 #include <iomanip>
 
 #include <boost/algorithm/string.hpp>

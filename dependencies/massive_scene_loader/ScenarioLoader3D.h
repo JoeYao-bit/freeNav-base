@@ -5,7 +5,7 @@
 #ifndef FREENAV_SCENARIOLOADER3D_H
 #define FREENAV_SCENARIOLOADER3D_H
 
-#include "basic_elements/point.h"
+#include "../../basic_elements/point.h"
 #include <vector>
 
 namespace freeNav {

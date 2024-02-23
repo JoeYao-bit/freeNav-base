@@ -5,8 +5,8 @@
 #ifndef FREENAV_DISTANVCE_CALCULATIONS_H
 #define FREENAV_DISTANVCE_CALCULATIONS_H
 #include <Eigen/Core>
-#include "misc.h"
-#include "pose_se2.h"
+#include "../basic_elements/misc.h"
+#include "../basic_elements/pose_se2.h"
 
 /**
  * @brief Helper function to obtain the closest point on a line segment w.r.t. a reference point

@@ -1,7 +1,7 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
-#include "basic_elements/point.h"
+#include "../basic_elements/point.h"
 namespace freeNav {
 
     enum GridState {

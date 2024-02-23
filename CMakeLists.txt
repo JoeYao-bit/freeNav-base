@@ -1,0 +1,244 @@
+cmake_minimum_required(VERSION 2.8)
+
+project(freeNav)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+enable_testing()
+# Check C++11 or C++0x support
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX17)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -std=c++17")
+    add_definitions(-DCOMPILEDWITHC17)
+    message(STATUS "Using flag -std=c++17.")
+elseif(COMPILER_SUPPORTS_CXX14)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -std=c++14")
+    add_definitions(-DCOMPILEDWITHC14)
+    message(STATUS "Using flag -std=c++14.")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -std=c++0x")
+    add_definitions(-DCOMPILEDWITHC0X)
+    message(STATUS "Using flag -std=c++0x.")
+else()
+    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+endif()
+
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(G2O REQUIRED)
+find_package(Glog REQUIRED)
+find_package(SUITESPARSE REQUIRED)
+find_package(Octomap REQUIRED)
+find_package(Pangolin REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(CGAL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options system filesystem thread graph)
+#find_package(OMPL REQUIRED)
+find_package(LibXml2)
+find_package(argparse)
+
+if( NOT LIBXML2_FOUND )
+    message( FATAL_ERROR "libxml2 not found\n" )
+    return()
+endif()
+
+find_package(Python3 COMPONENTS Interpreter Development)
+
+message ( STATUS "Python3_FOUND = ${Python3_FOUND} " )
+message ( STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS} " )
+message ( STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES} " )
+
+# 开启QT用于预处理的组件
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+# 查找QT的模块
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Charts REQUIRED)
+
+set(QT_LIBS
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Widgets
+        Qt5::OpenGL
+        Qt5::PrintSupport
+        Qt5::Charts
+        )
+
+
+INCLUDE_DIRECTORIES(${Qt5Core_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${Qt5Gui_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${Qt5OpenGL_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${Qt5PrintSupport_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${Qt5Charts_INCLUDE_DIRS})
+
+include_directories(${YAML_CPP_INCLUDE_DIR})
+include_directories(${OMPL_INCLUDE_DIRS})
+include_directories(${CGAL_INCLUDE_DIRS})
+include_directories(${LIBXML2_INCLUDE_DIR})
+include_directories(${Python3_INCLUDE_DIRS})
+include_directories(${argparse_INCLUDE_DIRS})
+
+if(POLICY CMP0072)
+    set(OpenGL_GL_PREFERENCE "GLVND")
+endif()
+#########################################################
+# FIND GLUT
+#########################################################
+find_package(GLUT REQUIRED)
+include_directories(${GLUT_INCLUDE_DIRS})
+link_directories(${GLUT_LIBRARY_DIRS})
+add_definitions(${GLUT_DEFINITIONS})
+if(NOT GLUT_FOUND)
+    message(ERROR " GLUT not found!")
+endif(NOT GLUT_FOUND)
+#########################################################
+# FIND OPENGL
+#########################################################
+find_package(OpenGL REQUIRED)
+find_package(Octomap REQUIRED)
+include_directories(${OpenGL_INCLUDE_DIRS})
+link_directories(${OpenGL_LIBRARY_DIRS})
+add_definitions(${OpenGL_DEFINITIONS})
+if(NOT OPENGL_FOUND)
+    message(ERROR " OPENGL not found!")
+endif(NOT OPENGL_FOUND)
+
+option(ENABLE_LOG "whether enable log" ON)
+IF(ENABLE_LOG)
+    message(STATUS "Enable log print for debug" )
+    add_definitions( -DENABLE_LOG)
+ENDIF(ENABLE_LOG)
+
+include_directories(
+  SYSTEM
+  ${CSPARSE_INCLUDE_DIR}
+  ${SUITESPARSE_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${OCTOMAP_DIRS}
+)
+
+include(GoogleTest)
+
+
+include_directories(${EIGEN3_INCLUDE_DIRS}
+                    ${G2O_INCLUDE_DIR}
+                    ${GLOG_INCLUDE_DIRS}
+                    test/
+        )
+
+set(G2O_LIBS
+        g2o_cli
+        g2o_ext_freeglut_minimal
+        g2o_simulator
+        g2o_solver_slam2d_linear
+        g2o_types_icp
+        g2o_types_slam2d
+        g2o_core g2o_interface
+        g2o_solver_csparse
+        g2o_solver_structure_only
+        g2o_types_sba
+        g2o_types_slam3d
+        g2o_csparse_extension
+        g2o_opengl_helper
+        g2o_solver_dense
+        g2o_stuff
+        g2o_types_sclam2d
+        g2o_parser
+        g2o_solver_pcg
+        g2o_types_data
+        g2o_types_sim3
+        cxsparse)
+
+
+aux_source_directory(motion_planner/time_elastic_band    motion_planner_src)
+
+
+aux_source_directory(third_party/ros_motion_planner/global_planner ros_global_src)
+
+
+
+add_library(EECBS_lib                  ${EECBS_src} ${PBS_src} ${lacam_src} ${CBSH2-RTC_src} ${lacam2_src}
+                                       ${MAPF_LNS2_src} ${MAPF_LNS2_CBS_src} ${MAPF_LNS2_PIBT_src} ${PIBT2_src})
+
+
+#add_library(harrt_src_lib ${harrt_src})
+#target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})
+
+add_library(freeNav ${core_src}
+                    ${motion_planner_src}
+
+
+        )
+
+set(EXTERNAL_LIBS
+        ${QT_LIBS}
+        ${SUITESPARSE_LIBRARIES}
+        ${EIGEN3_LIBS}
+        ${OpenCV_LIBS}
+        gtest
+        glog
+        gtest_main
+        pthread
+        ${G2O_LIBS}
+        ${CSPARSE_LIB}
+        ${OCTOMAP_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${GLUT_LIBRARY}
+        ${Pangolin_LIBRARIES}
+        #${CGAL_LIBRARIES} # cause /usr/local/include/g2o/core/base_fixed_sized_edge.hpp:168:33: error: ‘(1.0e+0 / 2.0000000000000001e-9)’ is not a constant expression
+        ENL-SVG_LIB
+        move_base_2d_lib
+        ${yaml-cpp}
+        /usr/local/lib/libompl.so
+        ompl_path_planning_src_lib
+        jps_lib
+        lapinozz_2d_lib
+        3D-AStar-ThetaStar_lib
+        EECBS_lib
+        #lacam_lib
+        #PBS_lib
+        ${Boost_LIBRARIES}
+        #${LIBXML2}
+        #${DSL_LIBRARY}
+        DynamicVoronoi2D_lib
+        dynamicvoronoi_lib
+        ros_global_planner_lib
+        LibXml2::LibXml2
+        ${Python3_LIBRARIES}
+        /usr/local/lib/x86_64-linux-gnu/libkahypar.so
+        ${argparse_lib}
+        lib-graph
+        )
+
+target_link_libraries(freeNav ${EXTERNAL_LIBS})
+
+
+add_executable(test_canvas test/test_canvas.cpp)
+target_link_libraries(test_canvas freeNav)
+
+add_executable(test_3d_viewer test/test_3d_viewer.cpp)
+target_link_libraries(test_3d_viewer freeNav)
+
+add_executable(test_opengl test/test_opengl.cpp)
+target_link_libraries(test_opengl freeNav)
+
+add_executable(test_auto_sorted_queue test/test_auto_sorted_queue.cpp)
+target_link_libraries(test_auto_sorted_queue freeNav)
+
+add_executable(directory_detect_test test/test_directory_detect.cpp)
+target_link_libraries(directory_detect_test freeNav)
+
+add_executable(QT_gui ${qt_gui_src} test/resources/images.qrc)
+target_link_libraries(QT_gui freeNav ${EXTERNAL_LIBS})
+
+
+

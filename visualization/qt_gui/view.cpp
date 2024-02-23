@@ -174,12 +174,6 @@ View::View(const QString &name, QWidget *parent)
 
     bar_grid_map->addMenu(gridMapValueMenu);
 
-    connect(drawHyperGraphAction, &QAction::triggered, this, &View::setHyperGraphGridMap);
-    connect(drawHeuristic,        &QAction::triggered, this, &View::setHeuristicTable);
-    connect(drawInstance,         &QAction::triggered, this, &View::setInstanceGridMap);
-    connect(drawCluster,          &QAction::triggered, this, &View::setAllCluster);
-    connect(drawEmptyAction,      &QAction::triggered, this, &View::setEmptyGridMap);
-
     bar->addMenu(colorValueMenu);
 
     QList<QAction*> fileAactions;
@@ -255,7 +249,7 @@ View::View(const QString &name, QWidget *parent)
     agent_num_edit->setValidator(new QIntValidator(agent_num_edit));
     agent_num_edit->setEchoMode(QLineEdit::Normal);
 
-    connect(agent_num_edit, SIGNAL(editingFinished()), this, SLOT(agentNumEditFinished()));
+    //connect(agent_num_edit, SIGNAL(editingFinished()), this, SLOT(agentNumEditFinished()));
 
     // 只允许输入整型
     // ui->lineEdit->setValidator(new QIntValidator(ui->lineEdit));
@@ -329,7 +323,7 @@ View::View(const QString &name, QWidget *parent)
             this, SLOT(setResetButtonEnabled()));
 
     connect(selectModeButton, SIGNAL(toggled(bool)), this, SLOT(togglePointerMode()));
-    connect(drawFinalPathSpecificButton, SIGNAL(toggled(bool)), this, SLOT(setDrawNodeInPathSpecific()));
+    //connect(drawFinalPathSpecificButton, SIGNAL(toggled(bool)), this, SLOT(setDrawNodeInPathSpecific()));
 
     connect(dragModeButton, SIGNAL(toggled(bool)), this, SLOT(togglePointerMode()));
     connect(dragModeButton_second, SIGNAL(toggled(bool)), this, SLOT(togglePointerModeSecond()));
@@ -349,7 +343,7 @@ View::View(const QString &name, QWidget *parent)
 
     connect(printButton, SIGNAL(clicked()), this, SLOT(print()));
 
-    connect(drawCurrentInstance_second, SIGNAL(toggled(bool)), this, SLOT(toggleDrawCurrentInstance()));
+    //connect(drawCurrentInstance_second, SIGNAL(toggled(bool)), this, SLOT(toggleDrawCurrentInstance()));
 
     setupMatrix();
 
@@ -524,59 +518,6 @@ void View::setColorToRed() {
     setAllNodesColor(255, 0, 0);
 }
 
-void View::setHyperGraphGridMap() {
-    gridMapValueMenu->setTitle(tr("SetGridMapContent: HyperGraph"));
-    gridMapValueMenu->update();
-    resetGridMapToEmpty();
-    drawInstancesOfMAPFColor();
-    drawFreeGridGroupColor();
-    drawInstancesOfMAPFText();
-    drawNearbyHyperNodes();
-}
-
-void View::setEmptyGridMap() {
-    gridMapValueMenu->setTitle(tr("SetGridMapContent: Empty"));
-    gridMapValueMenu->update();
-    resetGridMapToEmpty();
-}
-
-void View::setDrawNodeInPathSpecific() {
-//    for(int level=0; level<all_level_nodes_.size(); level++) {
-//        for(int i=0; i<all_level_nodes_[level].size(); i++) {
-//            if(all_level_nodes_[level][i]->node_->in_final_path_) {
-//                all_level_nodes_[level][i]->setSpecific(drawFinalPathSpecificButton->isChecked());
-//            }
-//        }
-//    }
-}
-
-void View::setInstanceGridMap() {
-    gridMapValueMenu->setTitle(tr("SetGridMapContent: Instances"));
-    gridMapValueMenu->update();
-    resetGridMapToEmpty();
-    drawInstancesOfMAPFColor();
-    drawInstancesOfMAPFText();
-    //drawFreeGridGroupColor();
-}
-
-void View::setAllCluster() {
-    gridMapValueMenu->setTitle(tr("SetGridMapContent: AllClusters"));
-    gridMapValueMenu->update();
-    resetGridMapToEmpty();
-    drawAllCluster();
-}
-
-void View::setHeuristicTable() {
-    gridMapValueMenu->setTitle(tr("SetGridMapContent: HeuristicTable"));
-    gridMapValueMenu->update();
-    resetGridMapToEmpty();
-    drawInstancesOfMAPFColor();
-    drawInstancesOfMAPFText();
-    drawFreeGridGroupColor();
-    drawHeuristicTable();
-    std::cout << " draw heuristic table of agent " << current_shown_agent_ << std::endl;
-}
-
 void View::initGridMap() {
     // draw grid map
     int block_total_width = GRID_WIDTH + 2 * GRID_INTERVAL;
@@ -607,49 +548,6 @@ void View::initGridMap() {
     }
 }
 
-void View::initAgentRelations() {
-    // draw grid map
-    int block_total_width = GRID_WIDTH + 2 * GRID_INTERVAL;
-    all_agent_relations_.clear();
-    all_agent_relations_.clear();
-    for(int i=0; i<instance_.size(); i++) {
-        for(int j=0; j<instance_.size(); j++) {
-            Grid *grid = new Grid(10);
-            //std::cout << "i*block_total_width, j*block_total_width" << i*block_total_width << ", " << j*block_total_width << std::endl;
-            grid->setPos(i*block_total_width, j*block_total_width);
-            if(layered_mapf->all_passing_agent_[i].find(j) == layered_mapf->all_passing_agent_[i].end())
-            //if(layered_mapf->all_related_agent_[i].find(j) == layered_mapf->all_related_agent_[i].end())
-            {
-                grid->setColorRGB(255, 255,255);
-            } else {
-                grid->setColorRGB(COLOR_TABLE[i%30][0], COLOR_TABLE[i%30][1], COLOR_TABLE[i%30][2]);
-            }
-            all_agent_relations_.push_back(grid);
-        }
-    }
-}
-
-void View::initAgentNameText() {
-    agent_name_column_.clear();
-    agent_name_row_.clear();
-    int block_total_width = GRID_WIDTH + 2 * GRID_INTERVAL;
-    QFont font("TimesNewRoman", 20, QFont::Bold);
-    for(int i=0; i<instance_.size(); i++) {
-        QGraphicsTextItem * agent_text_row = new QGraphicsTextItem(QString(to_string(i).c_str()));
-        agent_text_row->setPos(i*block_total_width-block_total_width*1/4, -block_total_width-block_total_width/4);
-        agent_text_row->setZValue(10);
-        agent_text_row->setFont(font);
-        agent_name_row_.push_back(agent_text_row);
-        QGraphicsTextItem * agent_text_col = new QGraphicsTextItem(QString(to_string(i).c_str()));
-        agent_text_col->setPos(-block_total_width-block_total_width/4, i*block_total_width-block_total_width/2);
-        agent_text_col->setZValue(10);
-        agent_text_col->setFont(font);
-        agent_name_column_.push_back(agent_text_col);
-    }
-//    agent_name_row_;
-//    agent_name_column_;
-}
-
 void View::resetGridMapToEmpty() {
     for(auto& grid : all_grid_) {
         grid->strs_.clear();
@@ -666,208 +564,4 @@ void View::resetGridMapToEmpty() {
             }
         }
     }
-}
-
-void View::drawHeuristicTable() {
-    for(int j=0; j<dim_[1]; j++) {
-        for(int i=0; i<dim_[0]; i++) {
-            freeNav::Pointi<2> pt({i, j});
-            if(is_occupied_(pt)) continue;
-            freeNav::Id grid_id = freeNav::PointiToId(pt, dim_);
-            Grid *grid = all_grid_[grid_id];
-            const int& hyper_node_id = layered_mapf->grid_map_[grid_id]->hyper_node_id_;
-            std::stringstream ss_heuristic_value;
-            ss_heuristic_value << layered_mapf->all_heuristic_table_agent_[current_shown_agent_][hyper_node_id];
-            grid->strs_.push_back(ss_heuristic_value.str());
-        }
-    }
-}
-
-void View::drawAllCluster() {
-    // 1, pick largest cluster
-    const auto& all_clusters = layered_mapf->all_clusters_;//layered_mapf->selectLargestCluster(layered_mapf->all_related_agent_);
-    // 2, draw largest cluster's instance
-    for(int cid=0; cid<all_clusters.size(); cid++) {
-        for(const auto& agent_id : all_clusters[cid]) {
-            auto fill_color = COLOR_TABLE[cid % 30]; // cv::Vec3b(200, 200, 200);
-
-            freeNav::Id start_id = PointiToId(instance_[agent_id].first, dim_),
-                    target_id = PointiToId(instance_[agent_id].second, dim_);
-            all_grid_[start_id]->text_color_ = Qt::white;
-            all_grid_[start_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-
-            all_grid_[target_id]->text_color_ = Qt::white;
-            all_grid_[target_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-
-            int mean_color = fill_color[0] + fill_color[1] + fill_color[2];
-            if (mean_color > 450) {
-                all_grid_[start_id]->text_color_ = Qt::black;
-                all_grid_[target_id]->text_color_ = Qt::black;
-            } else {
-                all_grid_[start_id]->text_color_ = Qt::white;
-                all_grid_[target_id]->text_color_ = Qt::white;
-            }
-
-            std::stringstream ss_start;
-            ss_start << agent_id << "s";
-            all_grid_[start_id]->strs_.push_back(ss_start.str());
-
-            std::stringstream ss_target;
-            ss_target << agent_id << "t";
-            all_grid_[target_id]->strs_.push_back(ss_target.str());
-
-            std::stringstream ss_cluster_id;
-            ss_cluster_id << cid << "c";
-            all_grid_[start_id]->strs_.push_back(ss_cluster_id.str());
-            all_grid_[target_id]->strs_.push_back(ss_cluster_id.str());
-        }
-    }
-}
-
-void View::drawInstancesOfMAPFColor() {
-//    for(int i=0; i<instance_.size(); i++) {
-//        const auto& ist = instance_[i];
-//        freeNav::Pointi<2> start = ist.first, target = ist.second;
-//        freeNav::Id start_id = PointiToId(start, dim_), target_id = PointiToId(target, dim_);
-//        if(is_occupied_(start) || is_occupied_(target)) {
-//            std::cout << " start or target is occupied " << std::endl;
-//        }
-//
-//        auto fill_color = COLOR_TABLE[i % 30]; // cv::Vec3b(200, 200, 200);
-//        all_grid_[start_id]->text_color_ = Qt::white;
-//        all_grid_[start_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-//
-//        all_grid_[target_id]->text_color_ = Qt::white;
-//        all_grid_[target_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-//        int mean_color = fill_color[0] + fill_color[1] + fill_color[2];
-//        if(mean_color > 450) {
-//            all_grid_[start_id]->text_color_ = Qt::black;
-//            all_grid_[target_id]->text_color_ = Qt::black;
-//        } else {
-//            all_grid_[start_id]->text_color_ = Qt::white;
-//            all_grid_[target_id]->text_color_ = Qt::white;
-//        }
-//    }
-
-    // draw low level search traveled grid
-    int failed_instance_id = 10;
-    for(const int& id : ids_to_draw_) {
-        all_grid_[id]->setColorRGB(0, 0, 0);
-        all_grid_[id]->text_color_ = Qt::white;
-    }
-    std::cout << " cluster failed_instance_id agent id = "  << *layered_mapf->all_clusters_[failed_instance_id].begin() << std::endl;
-    for(int i=0; i<layered_mapf->all_clusters_.size(); i++) {
-        const auto& current_agents = layered_mapf->all_clusters_[i];
-        if(i==failed_instance_id) {
-            freeNav::Pointi<2> start = instance_[*current_agents.begin()].first, target = instance_[*current_agents.begin()].second;
-            freeNav::Id start_id = PointiToId(start, dim_), target_id = PointiToId(target, dim_);
-            std::cout << " ids_to_draw_ contain failed_instance_id start/target: " << (ids_to_draw_.find(start_id) != ids_to_draw_.end()) << " / "
-                    << (ids_to_draw_.find(target_id) != ids_to_draw_.end()) << std::endl;
-            continue;
-        }
-        for(const int& agent_id : current_agents) {
-            const auto& ist = instance_[agent_id];
-            freeNav::Pointi<2> start = ist.first, target = ist.second;
-            freeNav::Id start_id = PointiToId(start, dim_), target_id = PointiToId(target, dim_);
-            auto fill_color = COLOR_TABLE[i % 30]; // cv::Vec3b(200, 200, 200);
-            if (i < failed_instance_id) {
-                all_grid_[target_id]->text_color_ = Qt::white;
-                all_grid_[target_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-            } else {
-                all_grid_[start_id]->text_color_ = Qt::white;
-                all_grid_[start_id]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-            }
-            int mean_color = fill_color[0] + fill_color[1] + fill_color[2];
-            if(mean_color > 450) {
-                all_grid_[start_id]->text_color_ = Qt::black;
-                all_grid_[target_id]->text_color_ = Qt::black;
-            } else {
-                all_grid_[start_id]->text_color_ = Qt::white;
-                all_grid_[target_id]->text_color_ = Qt::white;
-            }
-        }
-    }
-}
-
-void View::drawInstancesOfMAPFText() {
-    for(int i=0; i<instance_.size(); i++) {
-        const auto& ist = instance_[i];
-        freeNav::Pointi<2> start = ist.first, target = ist.second;
-        freeNav::Id start_id = PointiToId(start, dim_), target_id = PointiToId(target, dim_);
-        if(is_occupied_(start) || is_occupied_(target)) {
-            std::cout << " start or target is occupied " << std::endl;
-        }
-        auto fill_color = COLOR_TABLE[i % 30]; // cv::Vec3b(200, 200, 200);
-        std::stringstream ss_start; ss_start << i << "s";
-        all_grid_[start_id]->strs_.push_back(ss_start.str());
-
-        std::stringstream ss_target; ss_target << i << "t";
-        all_grid_[target_id]->strs_.push_back(ss_target.str());
-    }
-}
-
-void View::drawFreeGridGroupColor() {
-    if(layered_mapf == nullptr) { return; }
-    const auto& hyper_nodes = layered_mapf->all_hyper_nodes_;
-    for(int i=0; i<hyper_nodes.size(); i++) {
-        if(hyper_nodes[i]->free_grid_group_.free_grids_.empty()) { continue; }
-        for(const auto& grid : hyper_nodes[i]->free_grid_group_.free_grids_) {
-            auto fill_color = COLOR_TABLE[i % 30];
-            all_grid_[grid->id_]->setColorRGB(fill_color[0], fill_color[1], fill_color[2]);
-        }
-    }
-}
-
-void View::drawFreeGridGroupText() {
-    if(layered_mapf == nullptr) { return; }
-    const auto& hyper_nodes = layered_mapf->all_hyper_nodes_;
-    for(int i=0; i<hyper_nodes.size(); i++) {
-        if(hyper_nodes[i]->free_grid_group_.free_grids_.empty()) { continue; }
-        for(const auto& grid : hyper_nodes[i]->free_grid_group_.free_grids_) {
-            std::stringstream ss;
-            ss << i << "g";
-            all_grid_[grid->id_]->strs_.push_back(ss.str());
-        }
-    }
-}
-
-void View::drawNearbyHyperNodes() {
-    if(layered_mapf == nullptr) { return; }
-    const auto& hyper_nodes = layered_mapf->all_hyper_nodes_;
-    // 1, draw neighbor of agent's start and target
-    for(int i=0; i<2*instance_.size(); i++) {
-        if(hyper_nodes[i]->agent_grid_ptr_ == nullptr) { continue; }
-        std::stringstream ss;
-        ss << hyper_nodes[i]->connecting_nodes_.size() << "nf";
-        all_grid_[hyper_nodes[i]->agent_grid_ptr_->id_]->strs_.push_back(ss.str());
-    }
-    // 2, draw neighbor of free grid group
-    for(int i=2*instance_.size(); i<hyper_nodes.size(); i++) {
-        const auto& free_grids = hyper_nodes[i]->free_grid_group_.free_grids_;
-        std::stringstream ss;
-        ss << hyper_nodes[i]->connecting_nodes_.size() << "na";
-        for(const auto& grid : free_grids) {
-            all_grid_[grid->id_]->strs_.push_back(ss.str());
-        }
-    }
-}
-
-void View::agentNumEditFinished() {
-    if( agent_num_edit->text().toInt() >= instance_.size() ||  agent_num_edit->text().toInt() < 0) { return; }
-    current_shown_agent_ = agent_num_edit->text().toInt();
-    agent_num_edit->setText(QString(to_string(current_shown_agent_).c_str()));
-    agent_num_edit->setPlaceholderText(QString(to_string(current_shown_agent_).c_str()));
-    //setHeuristicTable();
-    int block_total_width = GRID_WIDTH + 2 * GRID_INTERVAL;
-    agent_start_->setPos(instance_[current_shown_agent_].first[0]*block_total_width,
-                         instance_[current_shown_agent_].first[1]*block_total_width);
-    agent_start_->update();
-    agent_target_->setPos(instance_[current_shown_agent_].second[0]*block_total_width,
-                          instance_[current_shown_agent_].second[1]*block_total_width);
-    agent_target_->update();
-}
-
-void View::toggleDrawCurrentInstance() {
-    agent_start_->setVisible(!agent_start_->isVisible());
-    agent_target_->setVisible(!agent_target_->isVisible());
 }

@@ -5,11 +5,9 @@
 #include "3d_viewer.h"
 #include "dependencies/color_table.h"
 using namespace freeNav;
-using namespace freeNav::RimJump;
 bool window_running = true;
 bool Viewer3D::viewer_set_start = true;
 
-using namespace freeNav::RimJump;
 
 freeNav::Pointi<3> Viewer3D::start_;
 
@@ -54,15 +52,6 @@ void Viewer3D::DrawLine(int x1, int y1, int z1, int x2, int y2, int z2, float r,
     glEnd();
 }
 
-void Viewer3D::DrawTangentNode(const fr::RimJump::RoadMapGraphPtr<3>& tg, const NodeId& node_id, const cv::Vec3b& color) {
-    auto & ns = tg->nodes_;
-    freeNav::Pointi<3> center = ns[node_id]->sg_->pt_;
-    DrawPoint(center[0], center[1], center[2]);
-    for(const auto& vid : tg->nextNodes(ns[node_id])) {
-        const auto& pt2 = ns[vid]->sg_->pt_;
-        DrawLine(center, pt2, color[0], color[1], color[2]);
-    }
-}
 
 void Viewer3D::DrawVoxel(const Pointi<3>& pt, const cv::Vec3b& color) {
     DrawPoint(pt[0], pt[1], pt[2]);
@@ -92,45 +81,6 @@ void Viewer3D::DrawBlock(const Pointi<3>& p1, const Pointi<3>& p2, float r, floa
     DrawLine(p2[0], p2[1], p1[2], p2[0], p2[1], p2[2], r, g, b);
 
 
-}
-
-void Viewer3D::DrawTangentGraph(const freeNav::RimJump::RoadMapGraphPtr<3>& tg) {
-    auto & es = tg->edges_;
-    auto & ns = tg->nodes_;
-
-    int color_count = 0;
-    if(!es.empty()) {
-        for(const auto& node_ptr : tg->nodes_) {
-            for(const auto& branch_id : node_ptr->nextEdges(true)) {
-                Pointi<3> center = ns[es[branch_id]->nextNode(false)]->sg_->pt_;
-                DrawPoint(center[0], center[1], center[2]);
-                Pointi<3> end = ns[es[branch_id]->nextNode(true)]->sg_->pt_;
-                DrawLine(center, end,
-                         COLOR_TABLE[color_count][0],
-                         COLOR_TABLE[color_count][1],
-                         COLOR_TABLE[color_count][2]);
-                color_count ++;
-                color_count = color_count%30;
-            }
-            for(const auto& branch_id : node_ptr->nextEdges(false)) {
-                Pointi<3> center = ns[es[branch_id]->nextNode(false)]->sg_->pt_;
-                DrawPoint(center[0], center[1], center[2]);
-                Pointi<3> end = ns[es[branch_id]->nextNode(true)]->sg_->pt_;
-                DrawLine(center, end,
-                         COLOR_TABLE[color_count][0],
-                         COLOR_TABLE[color_count][1],
-                         COLOR_TABLE[color_count][2]);
-                color_count ++;
-                color_count = color_count%30;
-            }
-        }
-    } else {
-        for(NodeId id=0; id<ns.size(); id++) {
-            DrawTangentNode(tg, id, COLOR_TABLE[color_count]);
-            color_count ++;
-            color_count = color_count%29 + 1;
-        }
-    }
 }
 
 void Viewer3D::DrawLine(double x1, double y1, double z1, double x2, double y2, double z2, double line_width) {
@@ -206,72 +156,10 @@ void MyHandler3D::Keyboard(pangolin::View& view_, unsigned char key, int x, int 
     three_dimension_mutex_.unlock();
 }
 
-void Viewer3D::drawRoadMapEdgeAsPath(fr::RimJump::RoadMapGraphPtr<3>& tg, freeNav::RimJump::RoadMapEdgeTraitPtr<3> edge, const cv::Vec3b& color) {
-    drawEdge(tg, edge, false, false, color);
-//    auto to_start = tg.edge_close_edge_to(edge->edge_id_, true, true, MIN_TIME);
-//    while(to_start!=nullptr) {
-//        drawEdge(tg, to_start, false, false, color);
-//        to_start = tg.edge_close_edge_to(to_start->edge_id_, true, true, MIN_TIME);
-//    }
-//    auto to_target = tg.edge_close_edge_to(edge->edge_id_, false, true, MIN_TIME);
-//    while(to_target!=nullptr) {
-//        drawEdge(tg, to_target, false, false, color);
-//        to_target = tg.edge_close_edge_to(to_target->edge_id_, false, true, MIN_TIME);
-//    }
-}
-
-void Viewer3D::drawEdge(fr::RimJump::RoadMapGraphPtr<3>& tg, const freeNav::RimJump::RoadMapEdgeTraitPtr<3>& edge, bool only_loop, bool draw_branch, const cv::Vec3b& color) {
-    if(only_loop) {
-        if(!edge->isLoopEdge()) return;
-        //if(!freeNav::RimJump::RoadMapGraphBuilder<2>::isHyperLoopEdge(edge)) return;
-        if(!edge->isHyperLoopEdge()) return;
-    }
-
-    auto & ns = tg->nodes_;
-    auto & es = tg->edges_;
-
-    Pointi<3> pre     = ns[edge->nextNode(true)]->sg_->pt_;
-    Pointi<3> current = ns[edge->nextNode(false)]->sg_->pt_;
-    DrawLine(current, pre, color[0], color[1], color[2]);
-
-    int color_count = 0;
-    if(draw_branch) {
-        for(const auto& next_edge_id : tg->nextEdges(edge, true, true)) {
-            pre     = ns[es[next_edge_id]->nextNode(true)]->sg_->pt_;
-            current = ns[es[next_edge_id]->nextNode(false)]->sg_->pt_;
-            DrawLine(current, pre, color[0], color[1], color[2]);            color_count ++;
-        }
-        for(const auto& pre_edge_id : tg->nextEdges(edge, false, true)) {
-            pre     = ns[es[pre_edge_id]->nextNode(true)]->sg_->pt_;
-            current = ns[es[pre_edge_id]->nextNode(false)]->sg_->pt_;
-            DrawLine(current, pre, color[0], color[1], color[2]);            color_count ++;
-        }
-    }
-}
-
-void Viewer3D::drawRoadMapEdgesAsPath(fr::RimJump::RoadMapGraphPtr<3>& tg, freeNav::RimJump::RoadMapEdgeTraitPtrs<3>& edges) {
-    int color_count = 0;
-    for(const auto& edge : edges) {
-        cv::Vec3b color;
-        drawRoadMapEdgeAsPath(tg, edge, COLOR_TABLE[color_count]); color_count ++;
-    }
-}
-
 void Viewer3D::DrawPath(const Path<3> &path, float r, float g, float b) {
     if(path.size() < 2) return;
     for(int i=0; i<path.size()-1; i++) {
         DrawLine(path[i], path[i+1], r, g, b);
-    }
-}
-
-
-void Viewer3D::drawRoadMapEdges(fr::RimJump::RoadMapGraphPtr<3>& tg, freeNav::RimJump::RoadMapEdgeTraitPtrss<3>& edgess) {
-    int color_count = 0;
-    for(const auto& edges : edgess) {
-        for(const auto& edge : edges) {
-            drawEdge(tg, edge, false, false, COLOR_TABLE[color_count]);
-        }
-        color_count ++;
     }
 }
 

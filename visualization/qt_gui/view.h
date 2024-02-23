@@ -8,8 +8,8 @@
 #include <QGridLayout>
 
 #include "grid_element.h"
-#include "layered_mapf/instance_decomposition.h"
 #include "dependencies/color_table.h"
+#include "basic_elements/point.h"
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -48,19 +48,7 @@ public:
 
     void initGridMap();
 
-    void initAgentRelations();
-
-    void initAgentNameText();
-
     void resetGridMapToEmpty();
-
-    void drawInstancesOfMAPFColor();
-    void drawInstancesOfMAPFText();
-    void drawFreeGridGroupColor();
-    void drawFreeGridGroupText();
-    void drawNearbyHyperNodes();
-    void drawHeuristicTable();
-    void drawAllCluster();
 
     int current_shown_agent_ = 0;
 
@@ -76,8 +64,6 @@ public:
 
     // draw the dependency relation between agents
     std::vector<Grid*> all_agent_relations_;
-
-    freeNav::TCBS::MAPFInstanceDecompositionPtr<2> layered_mapf;
 
     CircleOfGrid *agent_start_, *agent_target_;
 
@@ -120,17 +106,6 @@ private slots:
 
     void setColorToGreen();
     void setColorToRed();
-    void setDrawNodeInPathSpecific(); // whether draw hyper node that form final path specificly
-
-    void setHyperGraphGridMap();
-    void setEmptyGridMap();
-    void setInstanceGridMap();
-    void setHeuristicTable();
-    void setAllCluster();
-
-    void agentNumEditFinished();
-
-    void toggleDrawCurrentInstance(); // 是否抗锯齿
 
     void updateWindowRatio();
 

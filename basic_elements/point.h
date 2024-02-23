@@ -510,9 +510,9 @@ namespace freeNav {
         // first and second CANNOT be the same point
         explicit Line(const Pointi<N> &first, const Pointi<N> &second) {
             if(first==second) {
-#ifdef ENABLE_LOG
-                DLOG(FATAL) << "!!!!fatal error occurred, line first == second" << std::endl;
-#endif
+//#ifdef ENABLE_LOG
+//                DLOG(FATAL) << "!!!!fatal error occurred, line first == second" << std::endl;
+//#endif
                 exit(0);
             }
             int devia(0);
@@ -754,9 +754,9 @@ namespace freeNav {
             if(DistBetween(offset, zero) < inflation_radiu)
                 inflation_offset.push_back(offset);
         }
-#ifdef ENABLE_LOG
-        std::cout << "-- inflation area size " << inflation_offset.size() << std::endl;
-#endif
+//#ifdef ENABLE_LOG
+//        std::cout << "-- inflation area size " << inflation_offset.size() << std::endl;
+//#endif
         inflation_offset.shrink_to_fit();
         return inflation_offset;
     }

@@ -2,9 +2,9 @@
 // Created by yaozhuo on 2022/5/14.
 //
 
-#include "rim_jump/online_search/self_sorted_queue.h"
+#include "self_sorted_queue.h"
 
-namespace freeNav::RimJump {
+namespace freeNav {
 
 
     /*

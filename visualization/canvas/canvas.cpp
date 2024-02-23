@@ -4,9 +4,7 @@
 
 #include <Eigen/Dense>
 #include "canvas.h"
-#include "rim_jump/graph_construction/tangent_graph_build.h"
 #include "iomanip"
-#include "path_smooth/optimal_planner.h"
 namespace freeNav {
 
     Canvas::Canvas(std::string name, int size_x, int size_y, double resolution, int zoom_ratio) :
@@ -228,17 +226,6 @@ namespace freeNav {
         }
     }
 
-    void Canvas::drawHeuristicTable(const CBS::HeuristicTable &ht, DimensionLength *dim) {
-        for(int i=0; i<ht.size(); i++) {
-            if(ht[i] != MAX<CBS::HeuristicValue>) {
-                Pointi<2> pt = IdToPointi<2>(i, dim);
-                std::stringstream ss;
-                ss << ht[i];
-                drawTextInt(pt[0], pt[1], ss.str().c_str(), cv::Vec3b::all(0));
-            }
-        }
-    }
-
     void
     Canvas::drawGridLine(int x1, int y1, int x2, int y2, int line_width, bool center_offset, const cv::Scalar &color) {
         double offset = center_offset ? .5 : 0;
@@ -269,7 +256,7 @@ namespace freeNav {
         }
     }
 
-    void Canvas::drawGridMap(const freeNav::RimJump::MapDownSampler<2>& down_sampler, int down_sample_level) {
+    void Canvas::drawGridMap(const freeNav::MapDownSampler<2>& down_sampler, int down_sample_level) {
         const auto& dimension = down_sampler.raw_dimension_info_;
         const auto& is_occupied = down_sampler.raw_is_occupied_;
         if(down_sample_level == 0) {
@@ -283,69 +270,6 @@ namespace freeNav {
                     if (down_sampler.isOccupied(pt, down_sample_level)) { drawGrid(i, j); }
                 }
             }
-        }
-    }
-
-    void Canvas::drawENLVisibilityGraph(const Pathfinding::ENLSVG::VisibilityGraph &graph) {
-        for (const auto &edge : graph.edges) {
-            //if (edge.level % 2 == 1) continue;
-            auto color = cv::Scalar::all(20 * (edge.level % 10));
-            if (edge.level != Pathfinding::ENLSVG::VisibilityGraph::LEVEL_W) {
-                color = 200;
-                continue;
-            }
-            int sx = graph.vertices[edge.sourceVertex].x,
-                    sy = graph.vertices[edge.sourceVertex].y,
-                    ex = graph.vertices[edge.destVertex].x,
-                    ey = graph.vertices[edge.destVertex].y;
-            drawGridLine(sx, sy, ex, ey, 1, false, cv::Vec3b(0,255,0));
-        }
-    }
-
-    void Canvas::drawENLVisibilityGraph(const Pathfinding::ENLSVG::VisibilityGraph &graph, const Pathfinding::ENLSVG::Memory& memory) {
-        for (int i=0;i<graph.edges.size();i++) {
-            const auto& edge = graph.edges[i];
-            //if (edge.level % 2 == 1) continue;
-            auto color = cv::Scalar::all(20 * (edge.level % 10));
-//            if (edge.level != freeNav::RimJump::VisibilityGraph<2>::LEVEL_W) {
-//                continue;
-//            }
-            if (!memory.markedEdges.isMarked[i]) {
-                continue;
-            }
-//            if(edge.level != Pathfinding::ENLSVG::VisibilityGraph::LEVEL_W) continue;
-//            if (!graph.isHyperEdge_[i]) {
-//                color = cv::Vec3b(0,255,0);
-//                //continue;
-//            } else {
-//                color = cv::Vec3b(0,0,255);
-//            }
-            const auto& grid_start  = graph.vertices[edge.sourceVertex];
-            const auto& grid_target = graph.vertices[edge.destVertex];
-
-//            if(memory.visited(grid_start->id_))
-//            {
-//                drawCircleInt(grid_start->pt_[0], grid_start->pt_[1], 5, false, -1, cv::Vec3b(0,255,0));
-//            }
-//            if(memory.visited(grid_target->id_))
-//            {
-//                drawCircleInt(grid_target->pt_[0], grid_target->pt_[1], 5, false, -1, cv::Vec3b(0,255,0));
-//            }
-
-            int sx = grid_start.x,
-                    sy = grid_start.y,
-                    ex = grid_target.x,
-                    ey = grid_target.y;
-            // drawGridLine(sx, sy, ex, ey, 1, false, color);
-            drawArrowInt(sx, sy, ex, ey, 1, false, color);
-
-        }
-    }
-
-    void Canvas::drawGrids(std::map<Id, freeNav::RimJump::GridPtr<2>> pts, const cv::Vec3b &color) {
-        for (const auto &pt : pts) {
-            drawGrid(pt.second->pt_[0], pt.second->pt_[1], color);
-            //drawTextInt(pt.second->pt_[0], pt.second->pt_[1], std::to_string(pt.second->surface_id_).c_str(), cv::Scalar::all(0));
         }
     }
 
@@ -363,16 +287,6 @@ namespace freeNav {
         }
     }
 
-    void Canvas::drawSurfaceGrids(const std::vector<freeNav::RimJump::GridPtr<2>> &sfg, const cv::Vec3b &color,
-                                  bool with_nearby) {
-        if (with_nearby) {
-            for (const auto &grid :sfg) {
-                for (const auto &pt : grid->nearby_surface_pts_) {
-                    drawGrid(pt[0], pt[1], cv::Vec3b::all(200));
-                }
-            }
-        }
-    }
 //
 //    void Canvas::drawWaveTreeNode(const freeNav::RimJump::WaveTreeNodePtr<2> &wave_tree_node_ptr) {
 //        if (wave_tree_node_ptr != nullptr) {
@@ -396,106 +310,6 @@ namespace freeNav {
 //        }
 //    }
 
-    void
-    Canvas::drawTangentGraphAllNodes(freeNav::RimJump::RoadMapGraphPtr<2> &tg, const cv::Vec3b &color1,
-                                     const cv::Vec3b &color2) {
-        int color_count = 0;
-        for (const auto &edge : tg->nodes_) {
-            drawGrid(edge->sg_->pt_[0], edge->sg_->pt_[1], color1);
-        }
-    }
-
-    void Canvas::drawMarkedInitialEdges(freeNav::RimJump::RoadMapGraphPtr<2> &tg, bool center_offset) {
-//        for (int i=0; i<tg.edges_.size(); i++) {
-//            if (tg.dist_to(i, true, true, MIN_TIME) != std::numeric_limits<double>::max())
-//                drawEdge(tg, tg.edges_[i], false, false, cv::Scalar(0, 255, 0));
-//            if (tg.dist_to(i, false, true, MIN_TIME) != std::numeric_limits<double>::max())
-//                drawEdge(tg, tg.edges_[i], false, false, cv::Scalar(255, 0, 0));
-//        }
-    }
-
-    void Canvas::drawTangentGraphEdge(freeNav::DimensionLength dimen[2],
-                                      freeNav::RimJump::RoadMapGraphPtr<2> &tg,
-                                      const freeNav::Pointi<2> &pt1,
-                                      const freeNav::Pointi<2> &pt2,
-                                      bool center_offset) {
-        Id start_id = freeNav::PointiToId<2>(pt1, dimen), end_id = freeNav::PointiToId<2>(pt2, dimen);
-        int color_count = 0;
-        //drawGrid(pt1[0], pt1[1], COLOR_TABLE[0]);
-        //drawGrid(pt2[0], pt2[1], COLOR_TABLE[1]);
-        auto start_grid_ptr = tg->surface_processor_->grid_map_[start_id];
-        if (start_grid_ptr != nullptr && start_grid_ptr->node_id_ != MAX<NodeId>) {
-            RimJump::RoadMapEdgeTraitPtr<2> edge_iter = nullptr;//start_iter->second->split_edges_.find(end_id);
-            EdgeId edge_id;//start_iter->second->split_edges_.find(end_id);
-            for(auto edge_temp_id : tg->nextEdges(tg->nodes_[start_grid_ptr->node_id_], true)) {
-                auto edge_temp = tg->edges_[edge_temp_id];
-                if(tg->nodes_[edge_temp->nextNode(true)]->sg_->id_ == end_id) {
-                    edge_iter = edge_temp;
-                    edge_id = edge_temp_id;
-                }
-            }
-            if(edge_iter != nullptr) {
-                drawEdge(tg, edge_iter, center_offset, false, false, cv::Scalar(0, 0, 255));
-
-                // draw edge
-                for (auto &next_edge_id : tg->nextEdges(tg->edges_[edge_id], true, true)) {
-                    drawEdge(tg, tg->edges_[next_edge_id], center_offset, false, false, cv::Scalar(255, 0, 0));
-                }
-                for (auto &pre_edge_id : tg->nextEdges(tg->edges_[edge_id], false, true)) {
-                    drawEdge(tg, tg->edges_[pre_edge_id], center_offset, false, false, cv::Scalar(0, 255, 0));
-                }
-            }
-
-        }
-    }
-
-    void Canvas::drawRoadMapEdges(freeNav::RimJump::RoadMapGraphPtr<2> &tg,
-                                  const freeNav::RimJump::RoadMapEdgeTraitPtrs<2> &edges,
-                                  bool center_offset, const cv::Scalar &color1) {
-        for (const auto &edge : edges) {
-            drawEdge(tg, edge, center_offset, false, false, color1);
-        }
-    }
-
-
-    void Canvas::drawRoadMapEdgeAsPath(RimJump::GeneralGraphPathPlannerWithEdge<2>& g2p2, freeNav::RimJump::RoadMapEdgeTraitPtr<2> edge, bool center_offset, bool is_edge, bool is_start,
-                                       const cv::Scalar &color) {
-        if(edge == nullptr) return;
-        //if (is_start) edge = edge->current_on_edge(is_edge, MIN_TIME);
-        if(edge == nullptr) return;
-        drawEdge(g2p2.tg_, edge, center_offset, false, false, color);
-        auto& data = g2p2.data_;
-        auto & ns = g2p2.tg_->nodes_;
-        auto & es = g2p2.tg_->edges_;
-        auto & hes = g2p2.tg_->hyper_edges_;
-
-        if (data->dist_to(edge, true, is_edge, MIN_TIME) != freeNav::MAX<freeNav::PathLen>)
-            drawTextInt((3 * ns[edge->nextNode(false)]->sg_->pt_[0] + ns[edge->nextNode(true)]->sg_->pt_[0]) / 4,
-                        (3 * ns[edge->nextNode(false)]->sg_->pt_[1] + ns[edge->nextNode(true)]->sg_->pt_[1]) / 4,
-                        std::to_string((int) (data->dist_to(edge, true, true, MIN_TIME))).c_str(), cv::Scalar(0, 255, 0));
-        if (data->dist_to(edge, false, is_edge, MIN_TIME) != freeNav::MAX<freeNav::PathLen>)
-            drawTextInt((ns[edge->nextNode(false)]->sg_->pt_[0] + 3 * ns[edge->nextNode(true)]->sg_->pt_[0]) / 4,
-                        (ns[edge->nextNode(false)]->sg_->pt_[1] + 3 * ns[edge->nextNode(true)]->sg_->pt_[1]) / 4,
-                        std::to_string((int) (data->dist_to(edge, false, true, MIN_TIME))).c_str(), cv::Scalar(255, 0, 0));
-
-        auto to_start = data->close_edge_to(edge, true, is_edge, MIN_TIME);
-        while (to_start != MAX<EdgeId>) {
-            drawEdge(g2p2.tg_, es[to_start], center_offset, false, false, color);
-            drawTextInt((3 * ns[es[to_start]->nextNode(false)]->sg_->pt_[0] + ns[es[to_start]->nextNode(true)]->sg_->pt_[0]) / 4,
-                        (3 * ns[es[to_start]->nextNode(false)]->sg_->pt_[1] + ns[es[to_start]->nextNode(true)]->sg_->pt_[1]) / 4,
-                        std::to_string((int) (data->dist_to(es[to_start], true, true, MIN_TIME))).c_str(), cv::Scalar(0, 255, 0));
-            to_start = data->close_edge_to(es[to_start], true, is_edge, MIN_TIME);
-        }
-        auto to_target = data->close_edge_to(edge, false, is_edge, MIN_TIME);
-        while (to_target != MAX<EdgeId>) {
-            drawEdge(g2p2.tg_, es[to_target], center_offset, false, false, color);
-            drawTextInt((ns[es[to_target]->nextNode(false)]->sg_->pt_[0] + 3 * ns[es[to_target]->nextNode(true)]->sg_->pt_[0]) / 4,
-                        (ns[es[to_target]->nextNode(false)]->sg_->pt_[1] + 3 * ns[es[to_target]->nextNode(true)]->sg_->pt_[1]) / 4,
-                        std::to_string((int) (data->dist_to(es[to_target], false, true, MIN_TIME))).c_str(), cv::Scalar(255, 0, 0));
-            to_target = data->close_edge_to(es[to_target], false, is_edge, MIN_TIME);
-        }
-    }
-
     void Canvas::drawPaths(const freeNav::Paths<2> &paths) {
         int color_count = 0;
         for (const auto &path : paths) {
@@ -513,30 +327,6 @@ namespace freeNav {
         auto arrow_tail = path[path.size() - 2];
         auto arrow_tip = path[path.size() - 1];
         //drawArrowInt(arrow_tail[0], arrow_tail[1], arrow_tip[0], arrow_tip[1], 2, center_offset, color);
-    }
-
-    void Canvas::drawEdges(freeNav::RimJump::RoadMapGraphPtr<2> &tg, const freeNav::RimJump::RoadMapEdgeTraitPtrs<2> &edges, bool center_offset,const cv::Scalar &color1) {
-        for (int i=0;i<edges.size();i++) {
-            const auto &edge = edges[i];
-            drawEdge(tg, edge, center_offset, true, false, COLOR_TABLE[i%30]);
-        }
-    }
-
-    void Canvas::drawNode(freeNav::RimJump::RoadMapGraphPtr<2> &tg, freeNav::NodeId & id, bool center_offset, const cv::Scalar &color1) {
-        auto& ns = tg->nodes_;
-        for(const auto& vid : tg->nextNodes(ns[id])) {
-            const auto& pt1 = ns[id]->sg_->pt_;
-            const auto& pt2 = ns[vid]->sg_->pt_;
-            drawArrowInt(pt1[0], pt1[1], pt2[0], pt2[1],
-                         1, center_offset, color1);
-        }
-    }
-
-    void Canvas::drawNodes(freeNav::RimJump::RoadMapGraphPtr<2> &tg, bool center_offset, const cv::Scalar &color1) {
-        auto& ns = tg->nodes_;
-        for(NodeId i=0; i<ns.size(); i++) {
-            drawNode(tg, i, center_offset, color1);
-        }
     }
 
     void Canvas::draw_DistMap(freeNav::DimensionLength *dimension,
@@ -564,178 +354,6 @@ namespace freeNav {
         drawLineInt(max_pt[0], min_pt[1], max_pt[0], max_pt[1], false);
     }
 
-    void Canvas::drawVoronoiGraph(const freeNav::RimJump::BlockDetectorPtr<2>& block_detector,
-                                  freeNav::DimensionLength *dimension, int hyper_node_id) {
-        const auto& hyper_pts = block_detector->hyper_pts_;
-        const auto& voronoi_pts = block_detector->voronoi_pts_;
-        const auto& voronoi_id_map = block_detector->voronoi_id_map_;
-        const auto& voronoi_graph = block_detector->voronoi_graph_;
-        const auto& hyper_voronoi_nodes = block_detector->hyper_vnode_ptrs_;
-        Id id;
-        // draw node with hyper group id
-//        for(const auto& pt : voronoi_pts)
-//        {
-//            id = PointiToId(pt, dimension);
-//            if(voronoi_graph[voronoi_id_map[id]].visible_hypers_.empty()) { continue; }
-//            const auto& hnode = voronoi_graph[voronoi_id_map[id]];
-//            Id total_hnode = 0;
-//            for(const auto& hyper_pair : hnode.visible_hypers_) {
-//                total_hnode += hyper_pair.first;
-//            }
-//            drawGrid(pt[0], pt[1], COLOR_TABLE[total_hnode % 30]);
-//        }
-
-          // draw hyper node with color
-//        for(const auto& node : hyper_voronoi_nodes) {
-//            for(const auto& pt : node->pts_) {
-//                drawGrid(pt[0], pt[1], COLOR_TABLE[node->hyper_group_id_ % 30]);
-//            }
-//        }
-        const auto& hyper_voronoi_edges = block_detector->hyper_vedge_ptrs_;
-        for(int i=0; i<hyper_voronoi_edges.size(); i++) {
-            const auto& edge = hyper_voronoi_edges[i];
-            for(const auto& pt : edge->pts_) {
-                drawGrid(pt[0], pt[1], COLOR_TABLE[i % 30]);
-            }
-        }
-    }
-
-    void Canvas::drawNodes(RimJump::RoadMapGraphPtr<2> &tg,
-                           RimJump::DynamicDataOfSearchWithNodePtr<2> data,
-                           bool center_offset, const cv::Scalar &color1) {
-        auto& ns = tg->nodes_;
-        for(NodeId i=0; i<ns.size(); i++) {
-            if(data->close_node_to(ns[i], false, MIN_TIME) != MAX<NodeId>) {
-                const auto & pt1 = ns[i]->sg_->pt_;
-                const auto & pt2 = ns[data->close_node_to(ns[i], false, MIN_TIME)]->sg_->pt_;
-
-                drawCircleInt(pt1[0], pt1[1], 1, false, -1, cv::Vec3b(0,255,0));
-
-                //drawLineInt(pt1[0], pt1[1], pt2[0], pt2[1], center_offset, 1, color1);
-
-            }
-            if(data->close_node_to(ns[i], true, MIN_TIME) != MAX<NodeId>) {
-                const auto & pt1 = ns[i]->sg_->pt_;
-                const auto & pt2 = ns[data->close_node_to(ns[i], true, MIN_TIME)]->sg_->pt_;
-                drawArrowInt(pt2[0], pt2[1], pt1[0], pt1[1], 1, center_offset, cv::Vec3b(255,0,0));
-            }
-        }
-    }
-
-    void Canvas::drawEdgess(freeNav::RimJump::RoadMapGraphPtr<2> &tg,
-                            const freeNav::RimJump::RoadMapEdgeTraitPtrss<2> &edgess,
-                            bool center_offset) {
-        for (int i = 0; i < edgess.size(); i++) {
-            drawEdges(tg, edgess[i], center_offset, COLOR_TABLE[i]);
-        }
-    }
-
-    void Canvas::drawEdge(freeNav::RimJump::RoadMapGraphPtr<2> &tg,
-                          const freeNav::RimJump::RoadMapEdgeTraitPtr<2> &edge,
-                          bool center_offset,
-                          bool only_loop, bool draw_branch,
-                          const cv::Scalar &color1) {
-        if(edge == nullptr) return;
-        if (only_loop) {
-            if (!edge->isLoopEdge()) return;
-            if(edge->nextEdges(false).empty() || edge->nextEdges(true).empty()) return;
-            //if(!freeNav::RimJump::RoadMapGraphBuilder<2>::isHyperLoopEdge(edge)) return;
-            //if (!edge->isHyperLoopEdge()) return;
-        }
-        //if(edge->isLoopEdge()) return;
-        //if(!edge->is_hyper_edge_node_) return;
-        // draw arrow cause error in big map
-        auto node_pre_ptr  = tg->nodes_[edge->nextNode(false)];
-        auto node_next_ptr = tg->nodes_[edge->nextNode(true)];
-
-        drawArrowInt(node_pre_ptr->sg_->pt_[0], node_pre_ptr->sg_->pt_[1], node_next_ptr->sg_->pt_[0], node_next_ptr->sg_->pt_[1],
-                     2, center_offset, color1);
-
-        //drawGridLine(edge->nextNode(false)->sg_->pt_[0], edge->nextNode(false)->sg_->pt_[1], edge->nextNode(true)->sg_->pt_[0], edge->nextNode(true)->sg_->pt_[1], 1, false, color1);
-        if (!edge->isLoopEdge()) {
-            //drawTextInt((3*edge->nextNode(false)->sg_->pt_[0] + edge->nextNode(true)->sg_->pt_[0]) / 4, (3*edge->nextNode(false)->sg_->pt_[1] + edge->nextNode(true)->sg_->pt_[1]) / 4, std::to_string(edge->level_).c_str(), cv::Scalar(0,255, 0));
-        } else {
-            //drawTextInt((3*edge->nextNode(false)->sg_->pt_[0] + edge->nextNode(true)->sg_->pt_[0]) / 4, (3*edge->nextNode(false)->sg_->pt_[1] + edge->nextNode(true)->sg_->pt_[1]) / 4, "INF", cv::Scalar(0,0, 255));
-        }
-        //std::stringstream ss;
-        //ss << edge->tarjan_time_ << "|" << edge->tarjan_earliest_time_;
-        //drawTextInt((3*edge->from_->sg_->pt_[0] + edge->to_->sg_->pt_[0]) / 4, (3*edge->from_->sg_->pt_[1] + edge->to_->sg_->pt_[1]) / 4, ss.str().c_str(), color1);
-
-        if (!edge->isLoopEdge()) {
-            //drawTextInt((3*edge->from_->sg_->pt_[0] + edge->to_->sg_->pt_[0]) / 4, (3*edge->from_->sg_->pt_[1] + edge->to_->sg_->pt_[1]) / 4, std::to_string(edge->level_).c_str(), COLOR_TABLE[4]);
-        }
-        if (!edge->isLoopEdge()) {
-            //drawTextInt((3*edge->from_->sg_->pt_[0] + edge->to_->sg_->pt_[0]) / 4, (3*edge->from_->sg_->pt_[1] + edge->to_->sg_->pt_[1]) / 4, std::to_string(edge->level_).c_str(), COLOR_TABLE[4]);
-        }
-
-        int color_count = 0;
-        if (draw_branch) {
-//            auto& grid_map = tg.surface_processor_;
-//            auto& edges = tg.edges_;
-//            auto& nodes = tg.nodes_;
-//            for (const auto &next_edge_id : tg.edge_next_edges(edge->edge_id(), true, true)) {
-//                drawArrowInt(nodes[edge->nextNode(true)]->sg_->pt_[0],
-//                             nodes[edge->nextNode(true)]->sg_->pt_[1],
-//                             nodes[edges[next_edge_id]->nextNode(true)]->sg_->pt_[0],
-//                             nodes[edges[next_edge_id]->nextNode(true)]->sg_->pt_[1], 1, true, COLOR_TABLE[color_count % 30]);
-//                color_count++;
-//            }
-//            for (const auto &pre_edge_id : tg.edge_next_edges(edge->edge_id(), false, true)) {
-//                drawArrowInt(nodes[edges[pre_edge_id]->nextNode(false)]->sg_->pt_[0],
-//                             nodes[edges[pre_edge_id]->nextNode(false)]->sg_->pt_[1],
-//                             nodes[edge->nextNode(true)]->sg_->pt_[0],
-//                             nodes[edge->nextNode(true)]->sg_->pt_[1], 1, true,
-//                             COLOR_TABLE[color_count % 30]);
-//                color_count++;
-//            }
-        }
-    }
-
-    void
-    Canvas::drawTangentGraphLegalEdges(freeNav::RimJump::RoadMapGraphPtr<2> &tg,
-                                       bool center_offset,
-                                       const cv::Vec3b &color1,
-                                       const cv::Vec3b &color2) {
-        freeNav::Pointi<2> pt1, pt2, pt3, pt4;
-        auto & edges = tg->edges_;
-        auto & nodes = tg->nodes_;
-        for (auto &node : tg->nodes_) {
-            // for each edge in the graph
-            for (auto &edge_id : tg->nextEdges(node, true)) {
-                auto &next_edges = tg->nextEdges(tg->edges_[edge_id], true, true);
-                //if(!next_edges.empty()) continue;
-                pt1 = nodes[edges[edge_id]->nextNode(false)]->sg_->pt_;
-                pt2 = nodes[edges[edge_id]->nextNode(true)]->sg_->pt_;
-                // draw current edge
-                drawGrid(pt2[0], pt2[1], color1);
-                drawGridLine(pt1[0], pt1[1], pt2[0], pt2[1], 1, true, color2);
-                // draw each next edges
-                for (auto next_edge_id : next_edges) {
-                    pt3 = nodes[edges[next_edge_id]->nextNode(false)]->sg_->pt_;
-                    pt4 = nodes[edges[next_edge_id]->nextNode(true)]->sg_->pt_;
-                    // draw next edge
-                    drawGridLine(pt3[0], pt3[1], pt4[0], pt4[1], 1, true, color2);
-                }
-            }
-        }
-    }
-
-//     void Canvas::drawPath(const std::vector<freeNav::RimJump::GridNode> &path, const cv::Scalar &color) {
-//        if (path.empty()) return;
-//        for (int i = 0; i < path.size() - 1; i++) {
-//            drawGridLine(path[i].x, path[i].y, path[i + 1].x, path[i + 1].y, 1, false, color);
-//        }
-//    }
-
-
-    void Canvas::drawPathi(const std::vector<Pathfinding::GridVertex> &path, const cv::Scalar &color) {
-        if (path.empty()) return;
-        for (int i = 0; i < path.size() - 1; i++) {
-            drawGridLine(path[i].x, path[i].y, path[i + 1].x, path[i + 1].y, 1, false, color);
-        }
-    }
-
-
     void Canvas::drawEmptyGrid() {
         if (zoom_ratio_ > 5) {
             for (int i = 0; i < canvas_.cols; i += zoom_ratio_) {
@@ -746,39 +364,6 @@ namespace freeNav {
             }
         }
     }
-
-    void Canvas::drawTangentPoints(const freeNav::Pointi<2> &start,
-                                   const freeNav::RimJump::RoadMapNodePtrs<2> &tpts) {
-        int color_count = 0;
-        for (const auto &tpt : tpts) {
-            freeNav::Pointi<2> end = tpt->sg_->pt_;
-            drawGridLine(start[0], start[1], end[0], end[1], 1, true, COLOR_TABLE[color_count % 30]);
-            color_count++;
-        }
-    }
-
-//    void Canvas::drawTangentPathPoints(freeNav::RimJump::PathPointWithEdgePtrs<2> pps, const freeNav::RimJump::Pointi<2> &start,
-//                                       const freeNav::RimJump::Pointi<2> &target) {
-//        for (int i = 0; i < pps.size(); i++) {
-//            drawTangentPathPoint(pps[i], start, target, COLOR_TABLE[i]);
-//        }
-//    }
-
-//    void Canvas::drawTangentPathPoint(freeNav::RimJump::PathPointWithEdgePtr<2> pps, const freeNav::RimJump::Pointi<2> &start,
-//                                      const freeNav::RimJump::Pointi<2> &target, const cv::Scalar &color) {
-//        freeNav::RimJump::PathPointWithEdgePtr<2> ppt = pps;
-//        freeNav::RimJump::PathPointWithEdgePtr<2> pre_ppt = nullptr;
-//
-//        freeNav::RimJump::Pointi<2> current(0);
-//        freeNav::RimJump::Pointi<2> pre(0);
-//        while (ppt != nullptr) {
-//            //pre_ppt = ppt->from();
-//            pre = ppt->last_edge_->nextNode(false)->sg_->pt_;
-//            current = ppt->last_edge_->nextNode(true)->sg_->pt_;
-//            drawGridLine(current[0], current[1], pre[0], pre[1], 1, true, color);
-//            ppt = ppt->from();
-//        }
-//    }
 
     void Canvas::drawTextInt(int x, int y, const char *string, const cv::Scalar &color, double scale, bool center_offset) {
 
@@ -792,48 +377,6 @@ namespace freeNav {
                     scale, color, 2);
     }
 
-    void Canvas::draw_RimJump_Extent(const freeNav::RimJump::Extent &extents, freeNav::DimensionLength dimen[2], double scale) {
-        for (int i = 0; i < extents.size(); i++) {
-            const freeNav::Pointi<2> pt = freeNav::IdToPointi<2>(i, dimen);
-            if (isOutOfBoundary(pt, dimen)) continue;
-            drawTextInt(pt[0], pt[1], std::to_string(extents[i]).c_str(), {0, 0, 255}, scale);
-        }
-    }
-
-    void Canvas::draw_RimJump_Intervals(const FractionPair& start,const RimJump::IntervalPtrs& prev_halfs, const cv::Scalar &color) {
-        for(const auto& interval : prev_halfs) {
-            drawLineInt(interval->xL_, interval->y_, interval->xR_, interval->y_, true, 4, color);
-            drawLineInt(interval->xL_, interval->y_, start.first, start.second, true, 2, color);
-            drawLineInt(start.first, start.second, interval->xR_, interval->y_, true, 2, color);
-
-            drawCircleInt(interval->xL_, interval->y_, 5, true, 1, color);
-            drawCircleInt(interval->xR_, interval->y_, 5, true, 1, color);
-        }
-    }
-
-    void Canvas::draw_RimJump_IntervalTree(const FractionPair& start,
-                                           const freeNav::RimJump::IntervalTree &tree, freeNav::DimensionLength dimen[2],
-                                           const cv::Scalar &color, double scale) {
-        for(const auto& intervals : tree) {
-            for(const auto& interval : intervals) {
-
-                if(interval == nullptr) continue;
-
-                drawLineInt(interval->xL_, interval->y_, interval->xR_, interval->y_, true, 4, cv::Scalar(0, 255, 0));
-                drawLineInt(interval->xL_, interval->y_, start.first, start.second, true, 2, color);
-                drawLineInt(start.first, start.second, interval->xR_, interval->y_, true, 2, color);
-
-
-                int left_width = 1, right_width = 1;
-
-                drawCircleInt(interval->xL_, interval->y_, 5, true, left_width, color);
-                drawCircleInt(interval->xR_, interval->y_, 5, true, right_width, color);
-
-            }
-        }
-    }
-
-
     void Canvas::draw_ENLSVG_Extent(const std::vector<int> &extents, freeNav::DimensionLength dimen[2],
                                     double scale) {
         freeNav::DimensionLength internal_dimen[2];
@@ -844,24 +387,6 @@ namespace freeNav {
             if (isOutOfBoundary(pt, dimen)) continue;
             drawTextInt(pt[0], pt[1], std::to_string(extents[i]).c_str(), {0, 0, 255}, scale);
         }
-    }
-
-    void Canvas::draw_ENLSVG_ScannerStacks(const Pathfinding::ScannerStacks &scanner_stacks, const cv::Scalar &color) {
-//        for(const auto& interval : scanner_stacks.intervalStack_backup) {
-//            draw_ENLSVG_ScannerInterval(interval);
-//        }
-        for (const auto &neighbour : scanner_stacks.neighbours) {
-            drawCircleInt(neighbour.x, neighbour.y, 5, false, 1, color);
-        }
-    }
-
-    void Canvas::draw_ENLSVG_ScannerInterval(const Pathfinding::ScanInterval &scanner_interval, const cv::Scalar &color) {
-
-        drawLineInt(scanner_interval.xL.toFloat(), scanner_interval.y, scanner_interval.xR.toFloat(), scanner_interval.y, false);
-
-        drawCircleInt(scanner_interval.xL.toFloat(), scanner_interval.y, 5, false, 1, color);
-        drawCircleInt(scanner_interval.xR.toFloat(), scanner_interval.y, 5, false, 1, color);
-
     }
 
 }

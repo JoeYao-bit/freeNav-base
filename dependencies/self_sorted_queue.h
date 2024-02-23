@@ -5,13 +5,14 @@
 #ifndef FREENAV_SELF_SORTED_QUEUE_H
 #define FREENAV_SELF_SORTED_QUEUE_H
 
-#include "rim_jump/graph_construction/tangent_graph.h"
+#include "basic_elements/point.h"
 #include <vector>
 #include <assert.h>
+#include <memory>
 /*
  * the queue use in DFS for auto sorted
  * */
-namespace freeNav::RimJump {
+namespace freeNav {
 
     template <typename VALUE>
     struct withIndex {

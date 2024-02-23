@@ -2,10 +2,10 @@
 // Created by yaozhuo on 2021/9/20.
 //
 
-#include "canvas/canvas.h"
+#include "visualization/canvas/canvas.h"
+#include "basic_elements/point.h"
 #include "gtest/gtest.h"
 
-using namespace freeNav::RimJump;
 using namespace freeNav;
 
 Pointi<2> catched_point1;

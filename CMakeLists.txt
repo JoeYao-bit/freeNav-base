@@ -132,7 +132,7 @@ include(GoogleTest)
 include_directories(${EIGEN3_INCLUDE_DIRS}
                     ${G2O_INCLUDE_DIR}
                     ${GLOG_INCLUDE_DIRS}
-                    test/
+                    ${CMAKE_SOURCE_DIR}
         )
 
 set(G2O_LIBS
@@ -159,25 +159,25 @@ set(G2O_LIBS
         cxsparse)
 
 
-aux_source_directory(motion_planner/time_elastic_band    motion_planner_src)
+aux_source_directory(visualization/3d_viewer    3d_vis_src)
+aux_source_directory(visualization/canvas    canvas_src)
+aux_source_directory(visualization/qt_gui    qt_src)
 
-
-aux_source_directory(third_party/ros_motion_planner/global_planner ros_global_src)
-
-
-
-add_library(EECBS_lib                  ${EECBS_src} ${PBS_src} ${lacam_src} ${CBSH2-RTC_src} ${lacam2_src}
-                                       ${MAPF_LNS2_src} ${MAPF_LNS2_CBS_src} ${MAPF_LNS2_PIBT_src} ${PIBT2_src})
+aux_source_directory(basic_elements basic_src)
+aux_source_directory(dependencies depen_src)
+aux_source_directory(dependencies/2d_grid     2d_grid_src)
+aux_source_directory(dependencies/3d_octomap  3d_octomap_src)
+aux_source_directory(dependencies/3d_textmap  3d_textmap_src)
+aux_source_directory(dependencies/massive_scene_loader  mass_src)
 
 
 #add_library(harrt_src_lib ${harrt_src})
 #target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})
 
-add_library(freeNav ${core_src}
-                    ${motion_planner_src}
-
-
-        )
+add_library(freeNav ${3d_vis_src} ${canvas_src} ${qt_src}
+                    ${basic_src}
+        ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src}
+         )
 
 set(EXTERNAL_LIBS
         ${QT_LIBS}
@@ -195,28 +195,14 @@ set(EXTERNAL_LIBS
         ${GLUT_LIBRARY}
         ${Pangolin_LIBRARIES}
         #${CGAL_LIBRARIES} # cause /usr/local/include/g2o/core/base_fixed_sized_edge.hpp:168:33: error: ‘(1.0e+0 / 2.0000000000000001e-9)’ is not a constant expression
-        ENL-SVG_LIB
-        move_base_2d_lib
         ${yaml-cpp}
-        /usr/local/lib/libompl.so
-        ompl_path_planning_src_lib
-        jps_lib
-        lapinozz_2d_lib
-        3D-AStar-ThetaStar_lib
-        EECBS_lib
-        #lacam_lib
-        #PBS_lib
         ${Boost_LIBRARIES}
         #${LIBXML2}
         #${DSL_LIBRARY}
-        DynamicVoronoi2D_lib
-        dynamicvoronoi_lib
-        ros_global_planner_lib
         LibXml2::LibXml2
         ${Python3_LIBRARIES}
         /usr/local/lib/x86_64-linux-gnu/libkahypar.so
         ${argparse_lib}
-        lib-graph
         )
 
 target_link_libraries(freeNav ${EXTERNAL_LIBS})
@@ -237,7 +223,7 @@ target_link_libraries(test_auto_sorted_queue freeNav)
 add_executable(directory_detect_test test/test_directory_detect.cpp)
 target_link_libraries(directory_detect_test freeNav)
 
-add_executable(QT_gui ${qt_gui_src} test/resources/images.qrc)
+add_executable(QT_gui test/test_qt_gui.cpp visualization/qt_gui/resources/images.qrc)
 target_link_libraries(QT_gui freeNav ${EXTERNAL_LIBS})
 
 

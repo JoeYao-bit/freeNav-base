@@ -2,9 +2,8 @@
 // Created by yaozhuo on 2022/5/14.
 //
 
-#include "rim_jump/online_search/self_sorted_queue.h"
+#include "dependencies/self_sorted_queue.h"
 #include "gtest/gtest.h"
-using namespace freeNav::RimJump;
 using namespace freeNav;
 
 TEST(SORTED_QUEUE, SIMPLE_TEST) {

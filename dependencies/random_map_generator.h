@@ -5,9 +5,9 @@
 #ifndef FREENAV_RANDOM_MAP_GENERATOR_H
 #define FREENAV_RANDOM_MAP_GENERATOR_H
 
-#include "rim_jump/basic_elements/point.h"
+#include "basic_elements/point.h"
 
-namespace freeNav::RimJump {
+namespace freeNav {
 
     // add random number of cubic into the space
     template <Dimension N>

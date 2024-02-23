@@ -5,9 +5,21 @@
 #ifndef FREENAV_PATH_PLANNING_INTERFACE_H
 #define FREENAV_PATH_PLANNING_INTERFACE_H
 
-#include "rim_jump/online_search/search_path_with_edge.h"
+#include "basic_elements/point.h"
 
-namespace freeNav::RimJump {
+namespace freeNav {
+
+    typedef std::vector<double> Statistic; // a method's Statistic
+
+    typedef std::vector<Statistic> StatisticS;  // multiple method's Statistic
+
+    typedef std::vector<StatisticS> StatisticSS;  // multiple experiment 's multiple method's Statistic
+
+    typedef std::string OutputStream;  // a method's output stream
+
+    typedef std::vector<OutputStream> OutputStreamS; // multiple method's output stream
+
+    typedef std::vector<OutputStreamS> OutputStreamSS; // multiple experiment 's multiple method's output stream
 
     /* p2p_planning = point to point path planning
      * start: start point of path planning

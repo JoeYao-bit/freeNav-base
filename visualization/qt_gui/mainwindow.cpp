@@ -5,7 +5,6 @@
 #include <QSplitter>
 #include "config_gui.h"
 #include <sstream>
-#include "layered_mapf/instance_decomposition.h"
 
 using namespace freeNav;
 
@@ -20,11 +19,7 @@ MainWindow::MainWindow(freeNav::IS_OCCUPIED_FUNC<2> is_occupied,
     view->is_occupied_ = is_occupied;
     view->dim_ = dim;
     view->instance_ = instances;
-    view->ids_to_draw_ = ids_to_draw;
-    view->layered_mapf = std::make_shared<freeNav::TCBS::MAPFInstanceDecomposition<2> >(instances, dim, is_occupied);
     view->initGridMap();
-    view->initAgentRelations();
-    view->initAgentNameText();
     populateScene();
 
     view->view()->setScene(scene); // only content add before set will be visualized

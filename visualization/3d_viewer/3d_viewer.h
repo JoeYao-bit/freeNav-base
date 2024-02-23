@@ -21,15 +21,9 @@
 #include "eigen3/Eigen/LU"
 #include "eigen3/Eigen/Core"
 #include <pangolin/pangolin.h>
+#include "dependencies/3d_octomap/octomap_loader.h"
 
-#include "rim_jump/basic_elements/point.h"
-#include "rim_jump/online_search/path_tree_with_edge.h"
-#include "3d_octomap/octomap_loader.h"
-
-#include "dependencies/thread_pool.h"
-#include "3d_octomap/octomap_loader.h"
-#include "3d_textmap/voxel_loader.h"
-#include "EECBS/inc/common.h"
+#include "basic_elements/point.h"
 
 struct MyHandler3D : public pangolin::Handler3D
 {
@@ -58,9 +52,7 @@ struct Viewer3D
     void DrawGrid();
     void DrawLine(const fr::Pointi<3>& p1, const fr::Pointi<3>& p2, float r=1, float g=0, float b=0);
     void DrawLine(int x1, int y1, int z1, int x2, int y2, int z2, float r=1, float g=0, float b=0);
-    void DrawTangentGraph(const fr::RimJump::RoadMapGraphPtr<3>& tg);
 
-    void DrawTangentNode(const fr::RimJump::RoadMapGraphPtr<3>& tg, const fr::NodeId& node_id, const cv::Vec3b& color);
     void DrawVoxel(const fr::Pointi<3>& pt, const cv::Vec3b& color);
     void DrawVoxels(const fr::Pointis<3>& pts, const cv::Vec3b& color);
     void DrawBlock(const fr::Pointi<3>& p1, const fr::Pointi<3>& p2, float r=1, float g=0, float b=0);
@@ -70,10 +62,6 @@ struct Viewer3D
     void DrawPath(const fr::Path<3> &path, float r=1, float g=0, float b=0);
     void DrawBound(double min_x, double max_x,double min_y, double max_y,double min_z, double max_z);
     void DrawPoint(double px, double py, double pz);
-    void drawRoadMapEdgesAsPath(fr::RimJump::RoadMapGraphPtr<3>& tg, fr::RimJump::RoadMapEdgeTraitPtrs<3>& edges);
-    void drawRoadMapEdges(fr::RimJump::RoadMapGraphPtr<3>& tg, fr::RimJump::RoadMapEdgeTraitPtrss<3>& edgess);
-    void drawRoadMapEdgeAsPath(fr::RimJump::RoadMapGraphPtr<3>& tg, fr::RimJump::RoadMapEdgeTraitPtr<3> edge, const cv::Vec3b& color);
-    void drawEdge(fr::RimJump::RoadMapGraphPtr<3>& tg, const fr::RimJump::RoadMapEdgeTraitPtr<3>& edge, bool only_loop, bool draw_branch, const cv::Vec3b& color1);
 
     // draw an arrow in horizontal level
     void DrawArrow(double x1, double y1, double x2, double y2, double z, double head_width = 0.3, double line_width = 2);

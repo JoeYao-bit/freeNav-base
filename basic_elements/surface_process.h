@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/1/6.
 //
 
-#ifndef FREENAV_SURFACE_PROCESS_H
-#define FREENAV_SURFACE_PROCESS_H
+#ifndef FREENAV_BASE_SURFACE_PROCESS_H
+#define FREENAV_BASE_SURFACE_PROCESS_H
 
 #include <memory>
 #include <map>
@@ -60,7 +60,35 @@ namespace freeNav {
 
     };
 
+    // cross locally means there is both collide and free connection from pt1 to sg2's nearby
+    template <Dimension N>
+    bool LineCrossObstacleLocal(const Pointi<N>& pt1, const GridPtr<N>& sg2, IS_OCCUPIED_FUNC<N> is_occupied) {
+        if(pt1 == sg2->pt_) return true;
+        bool collide_flag = false, free_flag = false;
+        auto dist_square = (pt1 - sg2->pt_).Square();
+        int min_free_dist = MAX<int>;
+        int max_occ_dist = 0;
 
+        for(const auto &surface_grid : sg2->nearby_surface_pts_) {
+            // filter surface_grid that closer to pt1 than sg2
+            for (const auto &obst : sg2->nearby_obst_pts_) {
+                if(pointDistToLine(obst, pt1, surface_grid) < 1 - 1e-9) {
+                    collide_flag = true;
+                    int temp_dist = (pt1 - surface_grid).Square();
+                    if(temp_dist > max_occ_dist) max_occ_dist = temp_dist;
+                }
+                else {
+                    free_flag = true;
+                    int temp_dist = (pt1 - surface_grid).Square();
+                    if(temp_dist < min_free_dist) min_free_dist = temp_dist;
+                }
+            }
+            if(collide_flag && free_flag) return true;
+            // TODO: how about get the foot of a perpendicular and check whether it in the cubic of obstacle
+            //if(min_free_dist <  max_occ_dist) return true;
+        }
+        return false;
+    }
 
     template <Dimension N>
     Pointis<N> GetAllGridOfSpace(DimensionLength* dimension_info) {

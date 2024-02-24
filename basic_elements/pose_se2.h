@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/11/27.
 //
 
-#ifndef FREENAV_POSE_SE2_H
-#define FREENAV_POSE_SE2_H
+#ifndef FREENAV_BASE_POSE_SE2_H
+#define FREENAV_BASE_POSE_SE2_H
 
 #include <Eigen/Core>
 #include <iostream>

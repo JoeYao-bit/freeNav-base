@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/11/27.
 //
 
-#ifndef FREENAV_MISC_H
-#define FREENAV_MISC_H
+#ifndef FREENAV_BASE_MISC_H
+#define FREENAV_BASE_MISC_H
 
 
 #include <Eigen/Core>

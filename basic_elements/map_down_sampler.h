@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/4/17.
 //
 
-#ifndef FREENAV_MAP_DOWN_SAMPLER_H
-#define FREENAV_MAP_DOWN_SAMPLER_H
+#ifndef FREENAV_BASE_MAP_DOWN_SAMPLER_H
+#define FREENAV_BASE_MAP_DOWN_SAMPLER_H
 
 #include "../basic_elements/point.h"
 

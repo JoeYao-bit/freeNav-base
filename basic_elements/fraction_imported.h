@@ -1,5 +1,5 @@
-#ifndef FRACTION_IMPORTED_H
-#define FRACTION_IMPORTED_H
+#ifndef FREENAV_BASE_FRACTION_IMPORTED_H
+#define FREENAV_BASE_FRACTION_IMPORTED_H
 
 #include <string>
 #include <sstream>

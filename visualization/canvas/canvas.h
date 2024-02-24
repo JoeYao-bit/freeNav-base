@@ -2,16 +2,16 @@
 // Created by yaozhuo on 2021/9/20.
 //
 
-#ifndef FREENAV_CANVAS_H
-#define FREENAV_CANVAS_H
+#ifndef FREENAV_BASE_CANVAS_H
+#define FREENAV_BASE_CANVAS_H
 
-#include "dependencies/color_table.h"
+#include "../../dependencies/color_table.h"
 #include <functional>
-#include "dependencies/2d_grid/picture_loader.h"
-#include "basic_elements/point.h"
-#include "basic_elements/map_down_sampler.h"
-#include "basic_elements/pose_se2.h"
-#include "basic_elements/distance_calculations.h"
+#include "../../dependencies/2d_grid/picture_loader.h"
+#include "../../basic_elements/point.h"
+#include "../../basic_elements/map_down_sampler.h"
+#include "../../basic_elements/pose_se2.h"
+#include "../../basic_elements/distance_calculations.h"
 namespace freeNav {
 
     class Canvas {

@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/1/11.
 //
 
-#ifndef FREENAV_MAKE_SINGLETON_H
-#define FREENAV_MAKE_SINGLETON_H
+#ifndef FREENAV_BASE_MAKE_SINGLETON_H
+#define FREENAV_BASE_MAKE_SINGLETON_H
 namespace freeNav {
 
 #define MAKE_SINALETON(class_name)                    \

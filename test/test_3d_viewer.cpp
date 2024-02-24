@@ -13,10 +13,11 @@
 #include "dependencies/thread_pool.h"
 #include "dependencies/3d_textmap/voxel_loader.h"
 
-Viewer3D* viewer_3d;
-ThreadPool viewer_thread(1);
 
 using namespace freeNav;
+
+Viewer3DBase* viewer_3d;
+ThreadPool viewer_thread(1);
 
 struct timezone tz;
 struct timeval tv_pre;
@@ -75,7 +76,7 @@ int main() {
     ThreadPool tp(1);
 
     // set viewer
-    viewer_3d = new Viewer3D();
+    viewer_3d = new Viewer3DBase();
     viewer_3d->start_[0] = 94;
     viewer_3d->start_[1] = 89;
     viewer_3d->start_[2] = 126;

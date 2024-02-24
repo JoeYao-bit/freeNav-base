@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/1/2.
 //
 
-#ifndef FREENAV_POINT_H
-#define FREENAV_POINT_H
+#ifndef FREENAV_BASE_POINT_H
+#define FREENAV_BASE_POINT_H
 
 
 #define EPS_FR 1e-3

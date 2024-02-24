@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/7/4.
 //
 
-#ifndef FREENAV_MASSIVE_SCENE_LOADER_H
-#define FREENAV_MASSIVE_SCENE_LOADER_H
+#ifndef FREENAV_BASE_MASSIVE_SCENE_LOADER_H
+#define FREENAV_BASE_MASSIVE_SCENE_LOADER_H
 
 /*
  * scenarioLoader.h

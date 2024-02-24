@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/9/3.
 //
 
-#ifndef _COLOR_TABLE_H_
-#define _COLOR_TABLE_H_
+#ifndef FREENAV_BASE_COLOR_TABLE_H_
+#define FREENAV_BASE_COLOR_TABLE_H_
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"

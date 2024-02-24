@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/8/25.
 //
 
-#ifndef FREENAV_DISTANCE_MAP_UPDATE_H
-#define FREENAV_DISTANCE_MAP_UPDATE_H
+#ifndef FREENAV_BASE_DISTANCE_MAP_UPDATE_H
+#define FREENAV_BASE_DISTANCE_MAP_UPDATE_H
 
 #include "../basic_elements/point.h"
 

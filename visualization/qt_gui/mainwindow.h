@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef FREENAV_BASE_MAINWINDOW_H
+#define FREENAV_BASE_MAINWINDOW_H
 
 #include <QWidget>
 #include <QMainWindow>

@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/12/29.
 //
 
-#ifndef FREENAV_MEMORY_ANALYSIS_H
-#define FREENAV_MEMORY_ANALYSIS_H
+#ifndef FREENAV_BASE_MEMORY_ANALYSIS_H
+#define FREENAV_BASE_MEMORY_ANALYSIS_H
 
 #include <iostream>
 #include <thread>

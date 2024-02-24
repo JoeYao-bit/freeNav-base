@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/10/28.
 //
 
-#ifndef FREENAV_GRID_ELEMENT_H
-#define FREENAV_GRID_ELEMENT_H
+#ifndef FREENAV_BASE_GRID_ELEMENT_H
+#define FREENAV_BASE_GRID_ELEMENT_H
 
 #include <QColor>
 #include <QGraphicsItem>

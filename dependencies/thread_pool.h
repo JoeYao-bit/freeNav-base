@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/9/3.
 //
 
-#ifndef _THREAD_POOL_H_
-#define _THREAD_POOL_H_
+#ifndef FREENAV_BASE_THREAD_POOL_H_
+#define FREENAV_BASE_THREAD_POOL_H_
 
 #include <iostream>
 #include <thread>

@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/10/7.
 //
 
-#ifndef FREENAV_COMMOM_QTGUI_H
-#define FREENAV_COMMOM_QTGUI_H
+#ifndef FREENAV_BASE_COMMOM_QTGUI_H
+#define FREENAV_BASE_COMMOM_QTGUI_H
 
 // common data for CBS GUI
 #include <vector>

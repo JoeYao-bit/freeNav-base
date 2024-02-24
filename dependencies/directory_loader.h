@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/1/19.
 //
 
-#ifndef FREENAV_DIRECTORY_LOADER_H
-#define FREENAV_DIRECTORY_LOADER_H
+#ifndef FREENAV_BASE_DIRECTORY_LOADER_H
+#define FREENAV_BASE_DIRECTORY_LOADER_H
 
 #include <sys/stat.h>
 #include <dirent.h>

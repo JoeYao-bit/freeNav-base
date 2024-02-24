@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/11/28.
 //
 
-#ifndef FREENAV_DISTANVCE_CALCULATIONS_H
-#define FREENAV_DISTANVCE_CALCULATIONS_H
+#ifndef FREENAV_BASE_DISTANVCE_CALCULATIONS_H
+#define FREENAV_BASE_DISTANVCE_CALCULATIONS_H
 #include <Eigen/Core>
 #include "../basic_elements/misc.h"
 #include "../basic_elements/pose_se2.h"

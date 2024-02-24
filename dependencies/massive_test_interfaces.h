@@ -2,11 +2,11 @@
 // Created by yaozhuo on 2022/11/26.
 //
 
-#ifndef FREENAV_MASSIVE_TEST_INTERFACES_H
-#define FREENAV_MASSIVE_TEST_INTERFACES_H
+#ifndef FREENAV_BASE_MASSIVE_TEST_INTERFACES_H
+#define FREENAV_BASE_MASSIVE_TEST_INTERFACES_H
 #include <istream>
 #include <fstream>
-#include "basic_elements/point.h"
+#include "../basic_elements/point.h"
 
 #include "path_planning_interface.h"
 #include "./massive_scene_loader/ScenarioLoader2D.h"

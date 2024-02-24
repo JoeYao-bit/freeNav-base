@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/7/5.
 //
 
-#ifndef FREENAV_PATH_PLANNING_INTERFACE_H
-#define FREENAV_PATH_PLANNING_INTERFACE_H
+#ifndef FREENAV_BASE_PATH_PLANNING_INTERFACE_H
+#define FREENAV_BASE_PATH_PLANNING_INTERFACE_H
 
 #include "../basic_elements/point.h"
 

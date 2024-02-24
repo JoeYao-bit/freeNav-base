@@ -1,5 +1,5 @@
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef FREENAV_BASE_VIEW_H
+#define FREENAV_BASE_VIEW_H
 
 #include <QFrame>
 #include <QGraphicsView>
@@ -8,8 +8,8 @@
 #include <QGridLayout>
 
 #include "grid_element.h"
-#include "dependencies/color_table.h"
-#include "basic_elements/point.h"
+#include "../../dependencies/color_table.h"
+#include "../../basic_elements/point.h"
 
 QT_BEGIN_NAMESPACE
 class QLabel;

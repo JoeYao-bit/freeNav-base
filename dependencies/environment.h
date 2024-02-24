@@ -1,5 +1,5 @@
-#ifndef _ENVIRONMENT_H_
-#define _ENVIRONMENT_H_
+#ifndef FREENAV_BASE_ENVIRONMENT_H_
+#define FREENAV_BASE_ENVIRONMENT_H_
 
 #include "../basic_elements/point.h"
 namespace freeNav {

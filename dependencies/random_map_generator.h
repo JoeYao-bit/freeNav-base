@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2023/7/22.
 //
 
-#ifndef FREENAV_RANDOM_MAP_GENERATOR_H
-#define FREENAV_RANDOM_MAP_GENERATOR_H
+#ifndef FREENAV_BASE_RANDOM_MAP_GENERATOR_H
+#define FREENAV_BASE_RANDOM_MAP_GENERATOR_H
 
 #include "../basic_elements/point.h"
 

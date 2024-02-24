@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/11/27.
 //
 
-#ifndef FREENAV_SCENARIOLOADER3D_H
-#define FREENAV_SCENARIOLOADER3D_H
+#ifndef FREENAV_BASE_SCENARIOLOADER3D_H
+#define FREENAV_BASE_SCENARIOLOADER3D_H
 
 #include "../../basic_elements/point.h"
 #include <vector>

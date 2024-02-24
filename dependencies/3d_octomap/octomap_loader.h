@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/2/27.
 //
 
-#ifndef FREENAV_OCTOMAP_LOADER_H
-#define FREENAV_OCTOMAP_LOADER_H
+#ifndef FREENAV_BASE_OCTOMAP_LOADER_H
+#define FREENAV_BASE_OCTOMAP_LOADER_H
 
 #include <octomap/octomap.h>
 #include <octomap/ColorOcTree.h>

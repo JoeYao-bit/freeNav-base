@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/12/2.
 //
 
-#ifndef FREENAV_PICTURE_LOADER_H
-#define FREENAV_PICTURE_LOADER_H
+#ifndef FREENAV_BASE_PICTURE_LOADER_H
+#define FREENAV_BASE_PICTURE_LOADER_H
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"

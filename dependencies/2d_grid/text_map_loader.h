@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2022/7/10.
 //
 
-#ifndef FREENAV_TEXT_MAP_LOADER_H
-#define FREENAV_TEXT_MAP_LOADER_H
+#ifndef FREENAV_BASE_TEXT_MAP_LOADER_H
+#define FREENAV_BASE_TEXT_MAP_LOADER_H
 
 #include "basic_elements/point.h"
 #include "../environment.h"

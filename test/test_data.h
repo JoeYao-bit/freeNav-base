@@ -702,7 +702,7 @@ namespace freeNav {
                     {"los_output_path", "/home/yaozhuo/code/Grid-based Path Planning Competition Dataset/all-output/DA2-los.txt"},
                     {"config_path", "/home/yaozhuo/code/Grid-based Path Planning Competition Dataset/all-scene/DA2.3dmap.3dscen"},
                     {"output_path", "/home/yaozhuo/code/Grid-based Path Planning Competition Dataset/all-output/DA2.txt"},
-                    {"shrink_level", "1"}
+                    {"shrink_level", "5"}
             };
 
     // DA2.3dmap

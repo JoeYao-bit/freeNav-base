@@ -22,7 +22,7 @@ ScenarioLoader3D::ScenarioLoader3D(const std::string& file_path) {
     }
     for(int i=2; i<lines.size(); i++) {
         std::istringstream sin(lines[i]);
-        std::vector<string> fields;
+        std::vector<std::string> fields;
         std::string field;
         while (sin.rdbuf()->in_avail() != 0) {
             sin >> field;

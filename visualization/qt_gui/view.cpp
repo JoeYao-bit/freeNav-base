@@ -244,7 +244,7 @@ View::View(const QString &name, QWidget *parent)
     pointerModeGroup_second->addButton(dragModeButton_second);
 
     agent_num_edit = new QLineEdit(this);
-    agent_num_edit->setPlaceholderText(QString(to_string(current_shown_agent_).c_str()));
+    agent_num_edit->setPlaceholderText(QString(std::to_string(current_shown_agent_).c_str()));
     agent_num_edit->setClearButtonEnabled(true);
     agent_num_edit->setValidator(new QIntValidator(agent_num_edit));
     agent_num_edit->setEchoMode(QLineEdit::Normal);

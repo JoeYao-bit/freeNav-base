@@ -5,7 +5,7 @@
 #ifndef FREENAV_BASE_TEXT_MAP_LOADER_H
 #define FREENAV_BASE_TEXT_MAP_LOADER_H
 
-#include "basic_elements/point.h"
+#include "../../basic_elements/point.h"
 #include "../environment.h"
 #include <iostream>
 #include <fstream>

@@ -6,8 +6,6 @@
 #include <cmath>
 #include <vector>
 
-using namespace std;
-
 namespace freeNav {
 
     // numerator: fenzi / denominator: fenmu
@@ -47,8 +45,8 @@ struct Fraction {
         return float(n)/d;
     }
 
-    inline string toString() const {
-        stringstream a;
+    inline std::string toString() const {
+        std::stringstream a;
         a << n;
         if (d != 1)
             a << "/" << d;
@@ -179,9 +177,9 @@ Fraction operator*(int o, const Fraction& o2);
 Fraction operator/(int o, const Fraction& o2);
 Fraction operator+(int o, const Fraction& o2);
 Fraction operator-(int o, const Fraction& o2);
-ostream& operator<< (ostream& stream, const Fraction& obj);
+std::ostream& operator<< (std::ostream& stream, const Fraction& obj);
 
-Fraction parseFraction(string s);
+Fraction parseFraction(std::string s);
 
 typedef std::vector<Fraction> Fractions;
 typedef std::pair<Fraction, Fraction> FractionPair;

@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include "view.h"
-#include "basic_elements/point.h"
+#include "../../basic_elements/point.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsScene;

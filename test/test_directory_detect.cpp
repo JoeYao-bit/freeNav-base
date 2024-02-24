@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include "dependencies/directory_loader.h"
+#include "../dependencies/directory_loader.h"
 
 void getFiles(const char* path, std::vector<std::string>& files){
 

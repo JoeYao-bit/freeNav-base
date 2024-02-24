@@ -3,15 +3,15 @@
 //
 #include <sys/time.h>
 
-#include "visualization/3d_viewer/3d_viewer.h"
+#include "../visualization/3d_viewer/3d_viewer.h"
 
 #include "test_data.h"
-#include "basic_elements/point.h"
+#include "../basic_elements/point.h"
 
 #include "octomap/octomap.h"
-#include "dependencies/random_map_generator.h"
-#include "dependencies/thread_pool.h"
-#include "dependencies/3d_textmap/voxel_loader.h"
+#include "../dependencies/random_map_generator.h"
+#include "../dependencies/thread_pool.h"
+#include "../dependencies/3d_textmap/voxel_loader.h"
 
 
 using namespace freeNav;

@@ -1,10 +1,10 @@
-#include "visualization/qt_gui/mainwindow.h"
+#include "../visualization/qt_gui/mainwindow.h"
 #include <QApplication>
-#include "dependencies/memory_analysis.h"
+#include "../dependencies/memory_analysis.h"
 #include <libkahypar.h>
-#include "dependencies/2d_grid/text_map_loader.h"
-#include "dependencies/massive_scene_loader/ScenarioLoader2D.h"
-#include "test/test_data.h"
+#include "../dependencies/2d_grid/text_map_loader.h"
+#include "../dependencies/massive_scene_loader/ScenarioLoader2D.h"
+#include "../test/test_data.h"
 
 auto map_test_config = freeNav::MAPFTestConfig_Berlin_1_256;
 

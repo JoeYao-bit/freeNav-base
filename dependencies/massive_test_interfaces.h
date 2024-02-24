@@ -344,21 +344,21 @@ namespace freeNav {
             count_of_line ++;
         }
         std::cout << std::setprecision(5)
-                  << setiosflags(ios::left)<<setw(15)
+                  << std::setiosflags(std::ios::left)<<std::setw(15)
                   << " type name\t"
-                  << setiosflags(ios::left)<<setw(15) //设置宽度为7，left对齐方式
+                  << setiosflags(std::ios::left)<<std::setw(15) //设置宽度为7，left对齐方式
                   << "m_init_time\t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "m_search_cost\t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "m_total_cost \t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "m_length \t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "success_rate\t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "std_length\t"
-                  << setiosflags(ios::left)<<setw(15)
+                  << setiosflags(std::ios::left)<<std::setw(15)
                    << "path count\t "
                   //<< setiosflags(ios::left)<<setw(15)
                   << std::endl;
@@ -406,26 +406,26 @@ namespace freeNav {
             }
             //std::cout << " success_count " << success_count << " iter.second.size() " << iter.second.size() << std::endl;
             std::cout << std::setprecision(5)
-                      << setiosflags(ios::left)<<setw(15) //设置宽度为7，left对齐方式
+                      << setiosflags(std::ios::left)<<std::setw(15) //设置宽度为7，left对齐方式
                       << type_name << " \t"
                       // << ": m_init_time  = \t"
-                      << setiosflags(ios::left)<<setw(15) << init_time_cost / success_count << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << init_time_cost / success_count << " \t"
                       // << ", m_search_cost = \t"
-                      << setiosflags(ios::left)<<setw(15) << search_time_cost / success_count << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << search_time_cost / success_count << " \t"
                       // << ", m_total_cost  = \t"
-                      << setiosflags(ios::left)<<setw(15) << (init_time_cost+search_time_cost) / success_count << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << (init_time_cost+search_time_cost) / success_count << " \t"
                       // << ", m_length = \t"
-                      << setiosflags(ios::left)<<setw(15) << path_length / success_count << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << path_length / success_count << " \t"
                       // << ", success_rate = \t"
-                      << setiosflags(ios::left)<<setw(15) << success_count*100. / iter.second.size() << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << success_count*100. / iter.second.size() << " \t"
                       // << "%" << ", std_length = \t"
-                      << setiosflags(ios::left)<<setw(15) << path_length_standard / success_count << " \t"
+                      << setiosflags(std::ios::left)<<std::setw(15) << path_length_standard / success_count << " \t"
                       // << ", path count = \t "
-                      << setiosflags(ios::left)<<setw(15) << path_count / success_count << " \t";
+                      << setiosflags(std::ios::left)<<std::setw(15) << path_count / success_count << " \t";
             if(consider_path_count) {
                 std::cout
                 //<< ", mean_each_path_time_cost = "
-                << setiosflags(ios::left)<<setw(15) << (init_time_cost+search_time_cost) / success_count / required_count;
+                << setiosflags(std::ios::left)<<std::setw(15) << (init_time_cost+search_time_cost) / success_count / required_count;
             }
             std::cout << std::endl;
         }

@@ -2,8 +2,8 @@
 // Created by yaozhuo on 2021/9/20.
 //
 
-#include "visualization/canvas/canvas.h"
-#include "basic_elements/point.h"
+#include "../visualization/canvas/canvas.h"
+#include "../basic_elements/point.h"
 #include "gtest/gtest.h"
 
 using namespace freeNav;

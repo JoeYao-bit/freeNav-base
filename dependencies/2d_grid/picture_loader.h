@@ -10,7 +10,7 @@
 #include "opencv2/core/types_c.h"
 #include "opencv2/imgproc/imgproc.hpp"//draw a line
 #include "opencv2/opencv.hpp"
-#include "basic_elements/point.h"
+#include "../../basic_elements/point.h"
 #include "../environment.h"
 
 namespace freeNav {

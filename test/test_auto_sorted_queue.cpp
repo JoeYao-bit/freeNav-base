@@ -2,7 +2,7 @@
 // Created by yaozhuo on 2022/5/14.
 //
 
-#include "dependencies/self_sorted_queue.h"
+#include "../dependencies/self_sorted_queue.h"
 #include "gtest/gtest.h"
 using namespace freeNav;
 

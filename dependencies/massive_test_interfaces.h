@@ -467,36 +467,7 @@ namespace freeNav {
 
 
 
-    template <Dimension N>
-    bool SingleMapLOSCheckRandomMap(DimensionLength* dimension,
-                                    Id cubic_half_width,
-                                    Id cubic_number,
-                                    const std::string& random_file_path,
-                                    const std::string& block_file_path,
-                                    const std::string& test_data_path,
-                                    PathLen min_block_width = 3,
-                                    int shrink_level = 3,
-                                    int repeat = 100, int test_cases = 10000, int random_select = 100) {
-        RandomMapGenerator<N> random_map(dimension, cubic_half_width, cubic_number, random_file_path, false);
-        Id total_index = getTotalIndexOfSpace<N>(dimension);
-        std::cout << "cubic number: " << cubic_number << ", occ ratio : " << 100.*random_map.occ_grids_.size()/total_index << "%" << std::endl;
-        auto is_occupied_random = [&](const Pointi<N> & pt) -> bool {
-            if(isOutOfBoundary(pt, dimension)) { return true; }
-            Id id = PointiToId(pt, dimension);
-            return random_map.occ_ids_.find(id) != random_map.occ_ids_.end();
-        };
 
-        IS_OCCUPIED_FUNC<N> is_occupied_func = is_occupied_random;
-
-        SET_OCCUPIED_FUNC<N> set_occupied_func; // useless function, no need to set
-
-        return SingleMapLOSCheckAnyDimensionRandomMap(dimension, is_occupied_func, set_occupied_func,
-                                                      random_map.occ_grids_, random_map.occ_ids_,
-                                                      block_file_path, test_data_path,
-                                                      min_block_width, shrink_level,
-                                                      repeat, test_cases, random_select);
-
-    }
 
     template<Dimension N>
     std::vector<double> SingleMapLosTestDataAnalysis(const std::string& data_path) {

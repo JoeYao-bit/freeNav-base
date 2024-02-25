@@ -38,5 +38,19 @@ namespace freeNav {
                     {"shrink_level", "1"}
             };
 
+    SingleMapTestConfig<2> MAPFTestConfig_Berlin_1_256 =
+
+            {
+                    {"map_name",     "Berlin_1_256"},
+                    {"map_path",     "../test/test_data/Berlin_1_256.map"},
+                    {"scene_path",   "../test/test_data/Berlin_1_256-random-1.scen"},
+                    {"ct_path",   "../test/test_data/Berlin_1_256.ct"},
+                    {"output_path", "../test/test_data/Berlin_1_256-random-1.txt"},
+                    {"decomposition_output_path", "../test/test_data/Berlin_1_256-random-1_de.txt"},
+                    {"agent_num",    "400"}, // 600
+                    {"cut_off_time", "200"},
+                    {"max_run_time", "60"} // in second
+            };
+
 }
 #endif //FREENAV_TEST_DATA_H

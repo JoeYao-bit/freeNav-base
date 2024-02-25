@@ -12,7 +12,7 @@
 #include "../dependencies/random_map_generator.h"
 #include "../dependencies/thread_pool.h"
 #include "../dependencies/3d_textmap/voxel_loader.h"
-
+#include "../basic_elements/surface_process.h"
 
 using namespace freeNav;
 
@@ -24,17 +24,12 @@ struct timeval tv_pre;
 struct timeval tv_after;
 
 
-#define OCTO_MAP 1
+#define OCTO_MAP 0
 #if OCTO_MAP
 OctoMapLoader* oml_ = nullptr;
 #else
 TextMapLoader_3D* oml_ = nullptr;
 #endif
-
-
-//bool (*f1)(const freeNav::RimJump::Pointi<3>&) = is_occupied;
-//void (*f2)(const freeNav::RimJump::Pointi<3>&) = set_occupied;
-
 
 bool plan_finish = false;
 
@@ -71,6 +66,16 @@ int main() {
 
     SET_OCCUPIED_FUNC<3> set_occupied_func = set_occupied;
 
+    //RandomMapGenerator<3> random_map(oml_->getDimensionInfo(), 20, 50, file_path, false);
+#if !OCTO_MAP
+
+    gettimeofday(&tv_pre, &tz);
+    auto surface_processor = std::make_shared<SurfaceProcessorSparse<3> >(oml_->getDimensionInfo(),
+            is_occupied_func,
+            set_occupied_func,
+            oml_->occ_voxels_,
+            oml_->occ_voxel_ids_);
+#endif
     gettimeofday(&tv_pre, &tz);
 
     ThreadPool tp(1);

@@ -6,7 +6,7 @@
 #define FREENAV_BASE_DISTANCE_MAP_UPDATE_H
 
 #include "../basic_elements/point.h"
-
+#include <memory>
 namespace freeNav {
 
     template <Dimension N>

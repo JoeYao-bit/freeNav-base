@@ -60,7 +60,6 @@ namespace freeNav {
             for(int i=0; i<N; i++) {
                 new_pt[i] = floor(pt[i]/pow(2, down_sample_level));
             }
-            //std::cout << " raw pt " << pt << " / new_pt " << new_pt << std::endl;
             Id new_id = PointiToId(new_pt, dimension_infos_[down_sample_level-1]);
             return new_id;
         }
@@ -74,8 +73,6 @@ namespace freeNav {
                 dimension_infos_.push_back(dimen);
             }
         }
-
-    //private:
 
         void downSample() {
             map_pyramid_.clear();
@@ -170,8 +167,6 @@ namespace freeNav {
         }
 
     private:
-
-
 
         int shrink_level_;
 

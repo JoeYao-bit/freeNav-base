@@ -31,6 +31,34 @@ namespace freeNav {
     template <Dimension N>
     using SingleMapTestConfigs = std::vector<SingleMapTestConfig<N> >;
 
+
+    template <Dimension N>
+    struct RandomMapTestConfig {
+
+        std::string name_;
+
+        DimensionLength dim_[N];
+
+        Id cubic_half_width_;
+
+        Id cubic_number_;
+
+        std::string random_file_path_;
+
+        std::string block_file_path_;
+
+        std::string test_data_path_;
+
+        PathLen min_block_width_ = 3;
+
+        int shrink_level_ = 3;
+
+    };
+
+    template <Dimension N>
+    using RandomMapTestConfigs = std::vector<RandomMapTestConfig<N> >;
+
+
     // for 2d grid map data set from https://www.movingai.com/benchmarks/grids.html
     bool SceneTest2D(const std::string &config_file_path,
                      const Point2PointPathPlannings<2, Pointi<2>, Pointi<2>> &p2p_plan_test,

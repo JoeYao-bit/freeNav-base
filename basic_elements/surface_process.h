@@ -105,26 +105,6 @@ namespace freeNav {
 
     typedef std::vector<IdSet> RawProjectSpace;
 
-
-//    template <Dimension N>
-//    bool isOnSurface(const Pointi<N>& pt, const Pointis<N>& nearby_offset, const IS_OCCUPIED_FUNC<N>& is_occupied, bool on_obstacle_surface = false) {
-//        if(on_obstacle_surface) {
-//            if(!is_occupied_(pt)) { return false; }
-//        } else {
-//            if(is_occupied_(pt)) { return false; }
-//        }
-//        bool existing_free = false;
-//        bool existing_occupied = false;
-//        for(const auto& offset : nearby_offset) {
-//            if(is_occupied_(pt + offset)) { existing_occupied = true; }
-//            else { existing_free = true; }
-//            if(existing_free & existing_occupied) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     /* the flag used to intercept a 2D plane from N dimensional grid space  */
     typedef std::vector<int> InterceptFlag;
     typedef std::vector<InterceptFlag> InterceptFlags;

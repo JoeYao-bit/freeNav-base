@@ -28,7 +28,7 @@ namespace freeNav {
     typedef unsigned NodeId;
     typedef std::vector<NodeId> NodeIds;
 
-    typedef unsigned EdgeId; // use int(2 zi jie) to represent node/edge index, shared ptr is 4 zijie on 64bit computer
+    typedef unsigned EdgeId;
     typedef std::vector<EdgeId> EdgeIds;
 
     typedef unsigned long long int Id;
@@ -81,12 +81,6 @@ namespace freeNav {
                 val_[iter-list.begin()] = *iter;
             }
         }
-
-//        Point(const T& val) {
-//            for (uint i = 0; i < N; i++) {
-//                val_[i] = val;
-//            }
-//        }
 
         Point() {
             for (uint i = 0; i < N; i++) {
@@ -323,7 +317,7 @@ namespace freeNav {
         return pt[1] > 0 ? retv : -retv;
     }
 
-    typedef float PathLen; // 4 zijie, double 8 zijie
+    typedef float PathLen;
 
     template <Dimension N>
     using Path = std::vector<Pointi<N> >;
@@ -473,31 +467,22 @@ namespace freeNav {
             const Pointi<N> &begin,  // 直线开始点
             const Pointi<N> &end)   // 直线结束点
     {
-        //std::cout << "pt = " << pt <<  " begin " << begin << " end " << end << std::endl;
         PointF<N> retVal;
         PointF<N> delta = PointiToPointF(begin - end);
         Fraction dist_2_line = delta.Square();
         auto u = Fraction((pt - begin) * (begin - end));
         u = u / dist_2_line;
         retVal = PointiToPointF(begin) + u * delta;
-        //std::cout << "foot " << retVal << std::endl;
         return retVal;
     }
 
     template <Dimension N>
     PointF<N> getPerpedicularPoint(const Pointi<N>& pt1, const Pointi<N>& pt2, const Pointi<N>& x) {
-        //用向量求直线外的点在直线上的投影
-        PointF<N> p2p3 = PointiToPointF(x - pt2);//求向量p2p3
-        PointF<N> p2p1 = PointiToPointF(pt2 - pt1);//求向量p2p1
+        PointF<N> p2p3 = PointiToPointF(x - pt2);
+        PointF<N> p2p1 = PointiToPointF(pt2 - pt1);
         // use fraction for replace
-        PointF<N> BD = p2p3 * p2p1 / ((pt2 - x).Square()) * p2p3;//BD:P2与目标的构成的向量
-        PointF<N> p4 = PointiToPointF(pt2) - BD;//目标点 p4
-//        PointF<2> pt1f, pt2f, x_f;
-//        x_f[0]  = Fraction(x[0]),   x_f[1] = Fraction(x[1]);
-//        pt1f[0] = Fraction(pt1[0]), pt1f[1] = Fraction(pt1[1]);
-//        pt2f[0] = Fraction(pt2[0]), pt2f[1] = Fraction(pt2[1]);
-//        PointF<2> p4;
-//        p4 = pt1f + (x_f - pt1f)*(pt2f-pt1f)*(pt2f-pt1f)/((pt2-pt1).Square());
+        PointF<N> BD = p2p3 * p2p1 / ((pt2 - x).Square()) * p2p3;
+        PointF<N> p4 = PointiToPointF(pt2) - BD;
         return p4;
     }
 
@@ -510,9 +495,6 @@ namespace freeNav {
         // first and second CANNOT be the same point
         explicit Line(const Pointi<N> &first, const Pointi<N> &second) {
             if(first==second) {
-//#ifdef ENABLE_LOG
-//                DLOG(FATAL) << "!!!!fatal error occurred, line first == second" << std::endl;
-//#endif
                 exit(0);
             }
             int devia(0);
@@ -754,9 +736,6 @@ namespace freeNav {
             if(DistBetween(offset, zero) < inflation_radiu)
                 inflation_offset.push_back(offset);
         }
-//#ifdef ENABLE_LOG
-//        std::cout << "-- inflation area size " << inflation_offset.size() << std::endl;
-//#endif
         inflation_offset.shrink_to_fit();
         return inflation_offset;
     }
@@ -848,17 +827,12 @@ namespace freeNav {
         if(pt1 == pt2) return true;
         Line<N> line(pt1, pt2);
         int check_step = line.step;
-        //std::cout << " check step " << check_step << std::endl;
         Pointi<N> pt;
         for(int i=1; i<check_step; i++) {
             pt = line.GetPoint(i);
             if(is_occupied(pt)) {
                 return true;
             }
-            // if comment this, line cross check is faster, but resulted ETC_NoUselessPoint3 failed in some case
-            //if(ObstacleNearbyCheck(pt, line, pt1, pt2, is_occupied, neighbor)) return true;
-            //if(LineCrossInCubic(pt, pt1, pt2, line, neighbor, is_occupied)) return true;
-
         }
         return false;
     }
@@ -879,29 +853,11 @@ namespace freeNav {
             Pointis<N> nearby_for_check;
             Pointi<N> pt = line.GetPoint(i);
             retv.push_back(pt);
-//            for(const auto& offset : neighbor) {
-//                Pointi<N> temp_offset = offset;
-//                temp_offset[line.dimension_index] = 0;
-//                Pointi<N> temp_pt = pt + temp_offset;
-//                retv.push_back(temp_pt);
-//            }
-
         }
         retv.push_back(pt2);
         retv.shrink_to_fit();
         return retv;
     }
-
-    // TODO: get the grid the sphere of the radius
-//    template <Dimension N>
-//    Pointis<N> getSphereOfRadius(double radius) {
-//        Pointis<N> sphere;
-//        double up_bound = ceil(radius);
-//        for(double x = 0; x<= up_bound; x++) {
-//            //
-//        }
-//        return sphere;
-//    }
 
     template <Dimension N>
     Pointd<N> projectToLine(const Pointi<N>& pt1, const Pointi<N>& line1, const Pointi<N>& line2) {
@@ -910,7 +866,6 @@ namespace freeNav {
         Pointd<N> project = line1.toDouble() + unit_vector.multi(cos(angleBetweenThreePoints(pt1, line1, line2)) * line_length);
         return project;
     }
-
 
     bool isOneInFourCornerOccupied(const FractionPair& start_pt, IS_OCCUPIED_FUNC<2> is_occupied);
 

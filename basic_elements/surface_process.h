@@ -640,7 +640,7 @@ namespace freeNav {
             return this->grid_map_;
         }
 
-    private:
+    //private:
 
         // the minimum requirement of tangent candidate check
         //int minimum_surface_grid_near_obstacle_count_;
@@ -654,7 +654,7 @@ namespace freeNav {
         //GridPtrs<N> grid_map_; // store grid state, and replace IdToPointi
 
         friend class SurfaceProcess_LineScanner;
-        friend class SurfaceProcess_ENLSVG_LineScanner;
+        //friend class SurfaceProcess_ENLSVG_LineScanner;
 
         struct timeval tvafter, tvpre;
         struct timezone tz;
@@ -812,7 +812,7 @@ namespace freeNav {
             return occ_voxels_;
         }
 
-    private:
+    //private:
 
         // the minimum requirement of tangent candidate check
         //int minimum_surface_grid_near_obstacle_count_;
@@ -830,7 +830,7 @@ namespace freeNav {
         IdSet occ_voxel_ids_;
 
         friend class SurfaceProcess_LineScanner;
-        friend class SurfaceProcess_ENLSVG_LineScanner;
+        //friend class SurfaceProcess_ENLSVG_LineScanner;
 
         struct timeval tvafter, tvpre;
         struct timezone tz;

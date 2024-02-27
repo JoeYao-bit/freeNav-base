@@ -80,14 +80,6 @@ namespace freeNav {
         void
         DrawArrow(double x1, double y1, double x2, double y2, double z, double head_width = 0.3, double line_width = 2);
 
-        // 2D MAPF scene visualization
-        void DrawGridMapAtTimeIndex(DimensionLength *dimension_info, const IS_OCCUPIED_FUNC<2> &is_occupied,
-                                    int time_index);
-
-        void DrawMAPFPathAtTimeIndex(int time_index, bool draw_specific, int path_id, bool fix_height = true);
-
-        void DrawOneMAPFPathAtTimeIndex(int time_index, int path_id, bool fix_height = true);
-
         // key board interaction event listen function, for setting start and target coordinate
         static void KeyBoardCallBack_W(); // y + 1
         static void KeyBoardCallBack_A(); // y - 1

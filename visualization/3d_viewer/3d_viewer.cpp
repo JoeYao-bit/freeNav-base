@@ -464,20 +464,6 @@ namespace freeNav {
         glEnd();
     }
 
-    void Viewer3DBase::DrawGridMapAtTimeIndex(DimensionLength *dimension_info,
-                                              const IS_OCCUPIED_FUNC<2> &is_occupied,
-                                              int time_index) {
-        Pointi<2> pt;
-        double r, g, b;
-        for (int x = 0; x < dimension_info[0]; x++) {
-            for (int y = 0; y < dimension_info[1]; y++) {
-                pt[0] = x, pt[1] = y;
-                r = g = b = (is_occupied(pt) ? 0.1 : 1.0);
-                DrawVoxel(x, y, time_index, 0.5, r, g, b, true);
-            }
-        }
-    }
-
     void Viewer3DBase::DrawArrow(double x1, double y1, double x2, double y2, double z, double head_width,
                                  double line_width) {
         // the center pole

@@ -294,6 +294,11 @@ public:
     }
 
     float getMaximalMemoryUsage() const {
+        std::cout << "print all data: ";
+        for(const auto& data : used_memory_) {
+            std::cout << data << " ";
+        }
+        std::cout << std::endl;
         if(used_memory_.empty()) { return 0.; }
         auto maxPosition = max_element(used_memory_.begin(), used_memory_.end());
         return *(maxPosition);

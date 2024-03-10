@@ -49,35 +49,6 @@ message ( STATUS "Python3_FOUND = ${Python3_FOUND} " )
 message ( STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS} " )
 message ( STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES} " )
 
-# 开启QT用于预处理的组件
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
-# 查找QT的模块
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5OpenGL REQUIRED)
-find_package(Qt5PrintSupport REQUIRED)
-find_package(Qt5Charts REQUIRED)
-
-set(QT_LIBS
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::OpenGL
-        Qt5::PrintSupport
-        Qt5::Charts
-        )
-
-
-INCLUDE_DIRECTORIES(${Qt5Core_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${Qt5Gui_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${Qt5OpenGL_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${Qt5PrintSupport_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${Qt5Charts_INCLUDE_DIRS})
 
 include_directories(${YAML_CPP_INCLUDE_DIR})
 include_directories(${OMPL_INCLUDE_DIRS})
@@ -223,8 +194,6 @@ target_link_libraries(test_auto_sorted_queue freeNav-base)
 add_executable(directory_detect_test test/test_directory_detect.cpp)
 target_link_libraries(directory_detect_test freeNav-base)
 
-add_executable(QT_gui test/test_qt_gui.cpp visualization/qt_gui/resources/images.qrc)
-target_link_libraries(QT_gui freeNav-base ${EXTERNAL_LIBS})
 
 
 

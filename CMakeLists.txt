@@ -38,7 +38,6 @@ include_directories(
 aux_source_directory(basic_elements basic_src)
 aux_source_directory(dependencies depen_src)
 aux_source_directory(dependencies/2d_grid     2d_grid_src)
-aux_source_directory(dependencies/3d_octomap  3d_octomap_src)
 aux_source_directory(dependencies/3d_textmap  3d_textmap_src)
 aux_source_directory(dependencies/massive_scene_loader  mass_src)
 

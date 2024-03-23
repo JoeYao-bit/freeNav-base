@@ -263,15 +263,19 @@ inline float GetMemoryUsage(int pid)
 //    // cnvert VmRSS from KB to MB
 //    return vmrss / 1024.0;
 //#endif
+
     FILE* fp = fopen("/proc/self/status", "r");
     char line[128];
     while(fgets(line, 128,fp) != NULL) {
         if(strncmp(line, "VmRSS:", 6) == 0) {
             //std::cout << "mem size " << atoi(line + 6) << std::endl;
+            fclose(fp);
             return atoi(line + 6)/1024.0;
         }
     }
+    fclose(fp);
     return 0.;
+
 }
 
 // record how the memory use

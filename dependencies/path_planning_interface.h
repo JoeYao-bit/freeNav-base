@@ -111,6 +111,7 @@ namespace freeNav {
             Statistic statistic;
             OutputStream output_stream;
             Paths<N> path;
+            std::cout << " ists " << ists << std::endl;
             path_planning(dim, isoc, ists, path, statistic, output_stream);
             appendToFile(file_path, output_stream, append);
             if(path.empty()) {

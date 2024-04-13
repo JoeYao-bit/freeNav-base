@@ -6,7 +6,7 @@
 #define FREENAV_BASE_PATH_PLANNING_INTERFACE_H
 
 #include "../basic_elements/point.h"
-
+#include <ctime>
 namespace freeNav {
 
     typedef std::vector<double> Statistic; // a method's Statistic
@@ -90,6 +90,8 @@ namespace freeNav {
 
     void appendToFile(const std::string& file_name, const std::string& content, bool prune=false);
 
+    void printCurrentTime();
+
     // input: static occupancy map / current solving problem / previous path as constraints
     // output: what path was found, or empty is failed
     template<Dimension N>
@@ -111,7 +113,7 @@ namespace freeNav {
             Statistic statistic;
             OutputStream output_stream;
             Paths<N> path;
-            std::cout << " ists " << ists << std::endl;
+            //std::cout << " ists " << ists << std::endl;
             path_planning(dim, isoc, ists, path, statistic, output_stream);
             appendToFile(file_path, output_stream, append);
             if(path.empty()) {
@@ -133,6 +135,7 @@ namespace freeNav {
             const auto& ist = ists[i];
             bool success = MAPFPathPlanningsTest(dim, isoc, ist, mapf_path_plannings, file_path, append);
             std::cout << "-- finish " << i << " th instance " << std::endl;
+            printCurrentTime();
             if(all_success) all_success = success;
         }
         std::cout << " finish " << ists.size() << " cases" << std::endl;

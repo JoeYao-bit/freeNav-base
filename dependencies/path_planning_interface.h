@@ -120,6 +120,7 @@ namespace freeNav {
                 std::cout << "planning uses method " << i << " failed " << std::endl;
                 is_failed = true;
             }
+            printCurrentTime();
         }
         return !is_failed;
     }
@@ -135,7 +136,6 @@ namespace freeNav {
             const auto& ist = ists[i];
             bool success = MAPFPathPlanningsTest(dim, isoc, ist, mapf_path_plannings, file_path, append);
             std::cout << "-- finish " << i << " th instance " << std::endl;
-            printCurrentTime();
             if(all_success) all_success = success;
         }
         std::cout << " finish " << ists.size() << " cases" << std::endl;

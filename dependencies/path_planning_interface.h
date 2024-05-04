@@ -6,7 +6,7 @@
 #define FREENAV_BASE_PATH_PLANNING_INTERFACE_H
 
 #include "../basic_elements/point.h"
-
+#include <ctime>
 namespace freeNav {
 
     typedef std::vector<double> Statistic; // a method's Statistic
@@ -88,6 +88,10 @@ namespace freeNav {
         return !is_failed;
     }
 
+    void appendToFile(const std::string& file_name, const std::string& content, bool prune=false);
+
+    void printCurrentTime();
+
     // input: static occupancy map / current solving problem / previous path as constraints
     // output: what path was found, or empty is failed
     template<Dimension N>
@@ -102,22 +106,21 @@ namespace freeNav {
     template <Dimension N>
     bool MAPFPathPlanningsTest(DimensionLength* dim, const IS_OCCUPIED_FUNC<N> & isoc, const Instances<N> & ists,
                                      const MAPF_FUNC_TESTS<N>& mapf_path_plannings,
-                                     StatisticS& statistics, OutputStreamS& output_streams) {
-        statistics.clear();
-        output_streams.clear();
+                                     const std::string& file_path, bool append=false) {
         bool is_failed = false;
         for(int i=0; i<mapf_path_plannings.size(); i++) {
             const auto& path_planning = mapf_path_plannings[i];
             Statistic statistic;
             OutputStream output_stream;
             Paths<N> path;
+            //std::cout << " ists " << ists << std::endl;
             path_planning(dim, isoc, ists, path, statistic, output_stream);
-            statistics.push_back(statistic);
-            output_streams.push_back(output_stream);
+            appendToFile(file_path, output_stream, append);
             if(path.empty()) {
                 std::cout << "planning uses method " << i << " failed " << std::endl;
                 is_failed = true;
             }
+            printCurrentTime();
         }
         return !is_failed;
     }
@@ -127,19 +130,13 @@ namespace freeNav {
                                         const IS_OCCUPIED_FUNC<N> & isoc,
                                         const InstancesS<N> & ists,
                                         const MAPF_FUNC_TESTS<N>& mapf_path_plannings,
-                                        StatisticSS& statistics, OutputStreamSS& output_streams) {
-        statistics.clear();
-        output_streams.clear();
+                                        const std::string& file_path, bool append=false) {
         bool all_success = true;
         for(int i=0; i<ists.size(); i++) {
             const auto& ist = ists[i];
-            StatisticS statistic;
-            OutputStreamS output_stream;
-            bool success = MAPFPathPlanningsTest(dim, isoc, ist, mapf_path_plannings, statistic, output_stream);
+            bool success = MAPFPathPlanningsTest(dim, isoc, ist, mapf_path_plannings, file_path, append);
             std::cout << "-- finish " << i << " th instance " << std::endl;
             if(all_success) all_success = success;
-            statistics.push_back(statistic);
-            output_streams.push_back(output_stream);
         }
         std::cout << " finish " << ists.size() << " cases" << std::endl;
         return all_success;

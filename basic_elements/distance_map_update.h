@@ -33,7 +33,7 @@ namespace freeNav {
             waveFront();
         }
 
-        bool getClosestDistance(const Pointi<N>& pt, PathLen& dist, Pointi<N>& close_pt) {
+        bool getClosestDistance(const Pointi<N>& pt, PathLen& dist, Pointi<N>& close_pt) const {
             if(isOutOfBoundary(pt, dimension_info_)) {
                 std::cout << "DistanceMapUpdater::" << __FUNCTION__ << " pt " << pt << " out of boundary " << std::endl;
                 return false;
@@ -42,6 +42,10 @@ namespace freeNav {
             dist = dist_map_[id];
             close_pt = closet_pt_map_[id];
             return true;
+        }
+
+        PathLen getClosestDistance(const Id& id) const {
+            return dist_map_[id];
         }
 
     private:

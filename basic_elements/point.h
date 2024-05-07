@@ -908,10 +908,19 @@ namespace freeNav {
     using Instance = std::pair<Pointi<N>, Pointi<N> >;
 
     template <Dimension N>
+    using InstanceOrient = std::pair<std::pair<Pointi<N>, int>, std::pair<Pointi<N>, int> >;
+
+    template <Dimension N>
     using Instances = std::vector<Instance<N> >;
 
     template <Dimension N>
+    using InstanceOrients = std::vector<InstanceOrient<N> >;
+
+    template <Dimension N>
     using InstancesS = std::vector<Instances<N> >;
+
+    template <Dimension N>
+    using InstanceOrientsS = std::vector<InstanceOrients<N> >;
 
     template <Dimension N>
     std::ostream& operator << (std::ostream& os, const Instances<N>& ists) {

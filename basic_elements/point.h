@@ -905,10 +905,32 @@ namespace freeNav {
     }
 
     template <Dimension N>
+    struct Pose {
+        Pose(Pointi<N> pt, int orient) : pt_(pt), orient_(orient) {}
+
+        Pointi<N> pt_;
+
+        // for a N dimensional space, there are 2*N orientation
+        // e.g., 0,1,2,3 for 2D, 0,1,2,3,4,5,6,7 for 3D
+        // int orient can be translated into a Orthogonal vector:
+        // e.g., 2D: 0 -> (-1, 0),    1 -> (1, 0),    2 -> (0, -1),    3 -> (0, 1)
+        //       3D: 0 -> (-1, 0, 0), 1 -> (1, 0, 0), 2 -> (0, -1, 0), 3 -> (0, 1, 0), 4 -> (0, 0, -1), 5 -> (0, 0, 1),
+        int orient_ = 0;
+    };
+
+    template <Dimension N>
+    std::ostream & operator<<(std::ostream &out, const Pose<N>& pose){
+        out << pose.pt_ << "[" << pose.orient_ << "]";
+        return out;
+    }
+    template <Dimension N>
+    using PosePtr = Pose<N>*;
+
+    template <Dimension N>
     using Instance = std::pair<Pointi<N>, Pointi<N> >;
 
     template <Dimension N>
-    using InstanceOrient = std::pair<std::pair<Pointi<N>, int>, std::pair<Pointi<N>, int> >;
+    using InstanceOrient = std::pair<Pose<N>, Pose<N> >;
 
     template <Dimension N>
     using Instances = std::vector<Instance<N> >;

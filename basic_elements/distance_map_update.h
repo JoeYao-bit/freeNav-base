@@ -107,7 +107,7 @@ namespace freeNav {
                     }
                 }
             }
-            std::cout << " max_dist_ " << max_dist_ << " / min_dist_" << min_dist_ << std::endl;
+            //std::cout << " max_dist_ " << max_dist_ << " / min_dist_" << min_dist_ << std::endl;
         }
 
         virtual Pointis<N> expandCurrentPoint(const Pointi<N>& current_pt, int dim) {

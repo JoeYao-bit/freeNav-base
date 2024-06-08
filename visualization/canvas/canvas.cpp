@@ -121,8 +121,8 @@ namespace freeNav {
         drawLine(-x_range, 0., x_range, 0., 1, cv::Scalar::all(0));
         drawLine(0., -y_range, 0., y_range, 1, cv::Scalar::all(0));
 
-        drawArrow(x_range, 0., 0., .5, 1, cv::Scalar::all(0));
-        drawArrow(0., y_range, M_PI_2, .5, 1, cv::Scalar::all(0));
+        drawArrow(x_range, 0., 0., .5, 1, true, cv::Scalar::all(0));
+        drawArrow(0., y_range, M_PI_2, .5, 1, true, cv::Scalar::all(0));
 
         for (double i = ceil(-x_range + 1); i <= floor(x_range); i++) {
             if (i == 0) continue;
@@ -137,17 +137,18 @@ namespace freeNav {
     }
 
     void
-    Canvas::drawArrow(double x, double y, double theta, double arrow_length, int line_width, const cv::Scalar &color) {
+    Canvas::drawArrow(double x, double y, double theta, double arrow_length, int line_width, bool center_offset, const cv::Scalar &color) {
         Pointi<2> pti = transformToPixel(x, y);
-        drawArrowInt(pti[0], pti[1], theta, arrow_length, line_width, color);
+        drawArrowInt(pti[0], pti[1], theta, arrow_length, line_width, center_offset, color);
     }
 
     void
-    Canvas::drawArrowInt(int x, int y, double theta, double arrow_length, int line_width, const cv::Scalar &color) {
+    Canvas::drawArrowInt(int x, int y, double theta, double arrow_length, int line_width, bool center_offset, const cv::Scalar &color) {
         cv::Point p1(x, y);
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
         int arrow_length_i = arrow_length * resolution_;
         cv::Point2i p2 = p1 + cv::Point2i(arrow_length_i * cos(theta), -arrow_length_i * sin(theta));
-        cv::arrowedLine(canvas_, p1 * zoom_ratio_, p2 * zoom_ratio_, color, line_width, cv::LINE_AA, 0, .2);
+        cv::arrowedLine(canvas_, p1 * zoom_ratio_ + cv::Point(offset, offset), p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .2);
     }
 
     void

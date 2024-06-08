@@ -43,11 +43,11 @@ namespace freeNav {
         void drawCircle(double x1, double y1, double radius, int line_width = 1,
                         const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
-        void drawArrow(double x, double y, double theta, double arrow_length, int line_width = 1,
+        void drawArrow(double x, double y, double theta, double arrow_length, int line_width = 1, bool center_offset = true,
                        const cv::Scalar &color = cv::Scalar::all(0));
 
         void drawArrowInt(int x, int y, double theta, double arrow_length, int line_width = 1,
-                          const cv::Scalar &color = cv::Scalar::all(0));
+                          bool center_offset = true, const cv::Scalar &color = cv::Scalar::all(0));
 
         void drawArrowInt(int x1, int y1, int x2, int y2, int line_width, bool center_offset,
                           const cv::Scalar &color = cv::Scalar::all(0));

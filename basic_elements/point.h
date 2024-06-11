@@ -304,6 +304,7 @@ namespace freeNav {
 
     template <Dimension N> using Pointi = Point<int, N>;
     template <Dimension N> using PointF = Point<Fraction, N>;
+    template <Dimension N> using Pointf = Point<float, N>;
     template <Dimension N> using Pointd = Point<double, N>;
     template <Dimension N> using Neightbor = std::vector<Pointi<N>>;
     template <Dimension N> using Pointis = std::vector<Pointi<N>>;

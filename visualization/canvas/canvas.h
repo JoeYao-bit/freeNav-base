@@ -29,7 +29,7 @@ namespace freeNav {
 
         void drawLineInt(const Fraction& x1, const Fraction& y1, const Fraction& x2, const Fraction& y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
-        void drawLine(double x1, double y1, double x2, double y2, int line_width = 1,
+        void drawLine(double x1, double y1, double x2, double y2, int line_width = 1, bool center_offset = true,
                       const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawPointInt(int x, int y, const cv::Vec3b &color = cv::Vec3b(0, 0, 0));

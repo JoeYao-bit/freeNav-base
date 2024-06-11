@@ -50,10 +50,10 @@ namespace freeNav {
                  color, 1, cv::LINE_AA);
     }
 
-    void Canvas::drawLine(double x1, double y1, double x2, double y2, int line_width, const cv::Scalar &color) {
+    void Canvas::drawLine(double x1, double y1, double x2, double y2, int line_width, bool center_offset, const cv::Scalar &color) {
         Pointi<2> pti1 = transformToPixel(x1, y1);
         Pointi<2> pti2 = transformToPixel(x2, y2);
-        drawLineInt(pti1[0], pti1[1], pti2[0], pti2[1], false, line_width, color);
+        drawLineInt(pti1[0], pti1[1], pti2[0], pti2[1], center_offset, line_width, color);
     }
 
     void Canvas::drawPointInt(int x, int y, const cv::Vec3b &color) {
@@ -118,20 +118,20 @@ namespace freeNav {
 
     void Canvas::drawAxis(double x_range, double y_range, double wing_length) {
 
-        drawLine(-x_range, 0., x_range, 0., 1, cv::Scalar::all(0));
-        drawLine(0., -y_range, 0., y_range, 1, cv::Scalar::all(0));
+        drawLine(-x_range, 0., x_range, 0., 1, true, cv::Scalar::all(0));
+        drawLine(0., -y_range, 0., y_range, 1, true, cv::Scalar::all(0));
 
         drawArrow(x_range, 0., 0., .5, 1, true, cv::Scalar::all(0));
         drawArrow(0., y_range, M_PI_2, .5, 1, true, cv::Scalar::all(0));
 
         for (double i = ceil(-x_range + 1); i <= floor(x_range); i++) {
             if (i == 0) continue;
-            drawLine(i, -wing_length, i, wing_length, 1, cv::Scalar::all(0));
+            drawLine(i, -wing_length, i, wing_length, 1, true, cv::Scalar::all(0));
         }
 
         for (double i = ceil(-y_range + 1); i <= floor(y_range); i++) {
             if (i == 0) continue;
-            drawLine(-wing_length, i, wing_length, i, 1, cv::Scalar::all(0));
+            drawLine(-wing_length, i, wing_length, i, 1, true, cv::Scalar::all(0));
         }
 
     }
@@ -148,7 +148,7 @@ namespace freeNav {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         int arrow_length_i = arrow_length * resolution_;
         cv::Point2i p2 = p1 + cv::Point2i(arrow_length_i * cos(theta), -arrow_length_i * sin(theta));
-        cv::arrowedLine(canvas_, p1 * zoom_ratio_ + cv::Point(offset, offset), p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .2);
+        cv::arrowedLine(canvas_, p1 * zoom_ratio_ + cv::Point(offset, offset), p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .1);
     }
 
     void
@@ -163,7 +163,7 @@ namespace freeNav {
     void Canvas::drawPathf(const Pointds<2> &pathd, int line_width, const cv::Scalar &color) {
         if (pathd.empty()) return;
         for (int i = 0; i < pathd.size() - 1; i++) {
-            drawLine(pathd[i][0], pathd[i][1], pathd[i + 1][0], pathd[i + 1][1], line_width, color);
+            drawLine(pathd[i][0], pathd[i][1], pathd[i + 1][0], pathd[i + 1][1], line_width, true, color);
         }
     }
 
@@ -211,11 +211,11 @@ namespace freeNav {
         for (int i = 0; i < global_polygon.size() - 1; i++) {
             drawLine(global_polygon[i].x(), global_polygon[i].y(),
                      global_polygon[i + 1].x(), global_polygon[i + 1].y(),
-                     line_width, color);
+                     line_width, true, color);
         }
         drawLine(global_polygon.front().x(), global_polygon.front().y(),
                  global_polygon.back().x(), global_polygon.back().y(),
-                 line_width, color);
+                 line_width, true, color);
     }
 
     void Canvas::drawGrid(int x, int y, const cv::Vec3b &color) {

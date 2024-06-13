@@ -308,6 +308,7 @@ namespace freeNav {
     template <Dimension N> using Pointd = Point<double, N>;
     template <Dimension N> using Neightbor = std::vector<Pointi<N>>;
     template <Dimension N> using Pointis = std::vector<Pointi<N>>;
+    template <Dimension N> using Pointfs = std::vector<Pointf<N>>;
     template <Dimension N> using Pointds = std::vector<Pointd<N>>;
 
 
@@ -905,11 +906,11 @@ namespace freeNav {
         return true;
     }
 
-    template <Dimension N>
+    template <typename T, Dimension N>
     struct Pose {
-        Pose(Pointi<N> pt, int orient) : pt_(pt), orient_(orient) {}
+        Pose(Point<T, N> pt, int orient) : pt_(pt), orient_(orient) {}
 
-        Pointi<N> pt_;
+        Point<T, N> pt_;
 
         // for a N dimensional space, there are 2*N orientation
         // e.g., 0,1,2,3 for 2D, 0,1,2,3,4,5,6,7 for 3D
@@ -920,19 +921,19 @@ namespace freeNav {
 
     };
 
-    template <Dimension N>
-    std::ostream & operator<<(std::ostream &out, const Pose<N>& pose) {
+    template <typename T, Dimension N>
+    std::ostream & operator<<(std::ostream &out, const Pose<T, N>& pose) {
         out << pose.pt_ << "[" << pose.orient_ << "]";
         return out;
     }
-    template <Dimension N>
-    using PosePtr = Pose<N>*;
+    template <typename T, Dimension N>
+    using PosePtr = Pose<T, N>*;
 
     template <Dimension N>
     using Instance = std::pair<Pointi<N>, Pointi<N> >;
 
     template <Dimension N>
-    using InstanceOrient = std::pair<Pose<N>, Pose<N> >;
+    using InstanceOrient = std::pair<Pose<int, N>, Pose<int, N> >;
 
     template <Dimension N>
     using Instances = std::vector<Instance<N> >;

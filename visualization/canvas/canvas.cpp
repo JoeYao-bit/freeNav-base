@@ -38,6 +38,14 @@ namespace freeNav {
                  color, 1, cv::LINE_AA);
     }
 
+    void Canvas::drawLineFloat(float x1, float y1, float x2, float y2, bool center_offset, int line_width, const cv::Scalar &color) {
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+        cv::line(canvas_,
+                 cv::Point2i(x1 * zoom_ratio_, y1 * zoom_ratio_) + cv::Point(offset, offset),
+                 cv::Point2i(x2 * zoom_ratio_, y2 * zoom_ratio_) + cv::Point(offset, offset),
+                 color, 1, cv::LINE_AA);
+    }
+
     void Canvas::drawLineInt(const Fraction& x1, const Fraction& y1, const Fraction& x2, const Fraction& y2, bool center_offset, int line_width, const cv::Scalar &color) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
 

@@ -46,6 +46,14 @@ namespace freeNav {
                  color, 1, cv::LINE_AA);
     }
 
+    void Canvas::drawRectangleFloat(const Pointf<2>& min_pt, const Pointf<2>& max_pt, bool center_offset, int line_width, const cv::Scalar &color) {
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+        cv::Point2i min_pt_cv(min_pt[0] * zoom_ratio_, min_pt[1] * zoom_ratio_);
+        cv::Point2i max_pt_cv(max_pt[0] * zoom_ratio_, max_pt[1] * zoom_ratio_);
+        cv::rectangle(canvas_, min_pt_cv + cv::Point(offset, offset), max_pt_cv + cv::Point(offset, offset), color, line_width);
+    }
+
+
     void Canvas::drawLineInt(const Fraction& x1, const Fraction& y1, const Fraction& x2, const Fraction& y2, bool center_offset, int line_width, const cv::Scalar &color) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
 

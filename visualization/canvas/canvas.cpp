@@ -162,7 +162,7 @@ namespace freeNav {
     Canvas::drawArrowInt(int x, int y, double theta, double arrow_length, int line_width, bool center_offset, const cv::Scalar &color) {
         cv::Point p1(x, y);
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
-        int arrow_length_i = arrow_length * resolution_;
+        double arrow_length_i = arrow_length;
         cv::Point2i p2 = p1 + cv::Point2i(arrow_length_i * cos(theta), -arrow_length_i * sin(theta));
         cv::arrowedLine(canvas_, p1 * zoom_ratio_ + cv::Point(offset, offset), p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .1);
     }

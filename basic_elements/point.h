@@ -955,6 +955,14 @@ namespace freeNav {
         return os;
     }
 
+    template <typename T>
+    std::ostream& operator << (std::ostream& os, const std::set<T>& set_of_t) {
+        for(const auto& t : set_of_t) {
+            os << t << " ";
+        }
+        return os;
+    }
+
     // interfaces for layered MAPF
     using VERTEX_CONSTRAINED_FUNC = std::function<bool(const int& loc, const int& next_time)>;
 

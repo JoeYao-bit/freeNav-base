@@ -101,6 +101,8 @@ namespace freeNav {
 
         void drawTextInt(int x, int y, const char *string, const cv::Scalar &color, double scale = .7, bool center_offset = true);
 
+        void drawMultiTextInt(int x, int y, const std::vector<std::string>& strings, const cv::Scalar &color, double scale = .7, bool center_offset = true);
+
         //void drawWaveTree(const freeNav::WaveTree<2> &wave_tree);
 
         //void drawWaveTreeNode(const freeNav::WaveTreeNodePtr<2> &wave_tree_node_ptr);

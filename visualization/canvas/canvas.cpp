@@ -394,6 +394,22 @@ namespace freeNav {
                     scale, color, 2);
     }
 
+    void Canvas::drawMultiTextInt(int x, int y, const std::vector<std::string> &strings, const cv::Scalar &color,
+                                  double scale, bool center_offset) {
+
+        for(int i=0; i<strings.size(); i++) {
+            const auto& string = strings[i].c_str();
+            int baseline = 0;
+            cv::Size textSize = getTextSize(cv::String(string), cv::FONT_HERSHEY_COMPLEX, scale, 2, &baseline);
+
+            cv::putText(canvas_,
+                        cv::String(string),
+                        cv::Point2i((x) * zoom_ratio_, (y) * zoom_ratio_ + (textSize.height)*1.2*(i+1)),
+                        cv::FONT_HERSHEY_COMPLEX,
+                        scale, color, 2);
+        }
+    }
+
     void Canvas::draw_ENLSVG_Extent(const std::vector<int> &extents, freeNav::DimensionLength dimen[2],
                                     double scale) {
         freeNav::DimensionLength internal_dimen[2];

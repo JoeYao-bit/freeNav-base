@@ -18,6 +18,7 @@
 #include <functional>
 #include <initializer_list>
 #include <assert.h>
+#include <memory>
 
 #include "../basic_elements/fraction_imported.h"
 
@@ -927,7 +928,7 @@ namespace freeNav {
         return out;
     }
     template <typename T, Dimension N>
-    using PosePtr = Pose<T, N>*;
+    using PosePtr = std::shared_ptr<Pose<T, N> >;
 
     template <Dimension N>
     using Instance = std::pair<Pointi<N>, Pointi<N> >;

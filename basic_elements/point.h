@@ -639,7 +639,7 @@ namespace freeNav {
     }
 
     template <Dimension N>
-    Id PointiToId(const Pointi<N> &pt, DimensionLength* dimension_info) {
+    Id PointiToId(const Pointi<N> &pt, const DimensionLength* dimension_info) {
         Id index(pt[0]);
         Id buff(dimension_info[0]);
         for(unsigned long int i=1; i<N; i++) {

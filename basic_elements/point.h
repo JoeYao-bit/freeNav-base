@@ -736,7 +736,7 @@ namespace freeNav {
         buff.shrink_to_fit();
         Pointi<N> zero;
         for(const Pointi<N>& offset : buff) {
-            if(DistBetween(offset, zero) < inflation_radiu)
+            if(DistBetween(offset, zero) <= inflation_radiu)
                 inflation_offset.push_back(offset);
         }
         inflation_offset.shrink_to_fit();

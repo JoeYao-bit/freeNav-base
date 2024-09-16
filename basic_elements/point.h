@@ -911,6 +911,8 @@ namespace freeNav {
     struct Pose {
         Pose(Point<T, N> pt, int orient) : pt_(pt), orient_(orient) {}
 
+        Pose() : pt_(Pointi<N>()), orient_(0) {}
+
         Point<T, N> pt_;
 
         // for a N dimensional space, there are 2*N orientation

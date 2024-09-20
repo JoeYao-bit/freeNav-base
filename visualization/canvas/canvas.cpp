@@ -46,11 +46,28 @@ namespace freeNav {
                  color, 1, cv::LINE_AA);
     }
 
-    void Canvas::drawRectangleFloat(const Pointf<2>& min_pt, const Pointf<2>& max_pt, bool center_offset, int line_width, const cv::Scalar &color) {
+    void Canvas::drawRectangleFloat(const Pointf<2>& min_pt, const Pointf<2>& max_pt, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         cv::Point2i min_pt_cv(min_pt[0] * zoom_ratio_, min_pt[1] * zoom_ratio_);
         cv::Point2i max_pt_cv(max_pt[0] * zoom_ratio_, max_pt[1] * zoom_ratio_);
-        cv::rectangle(canvas_, min_pt_cv + cv::Point(offset, offset), max_pt_cv + cv::Point(offset, offset), color, line_width);
+        if(weight < 1.0) {
+            cv::Mat temp_copy(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(0));
+            cv::Mat background_copy = canvas_.clone();
+            // draw transparent shapes
+            cv::rectangle(temp_copy, min_pt_cv + cv::Point(offset, offset), max_pt_cv + cv::Point(offset, offset), color,
+                          line_width);
+            cv::Mat middle;
+            cv::addWeighted(background_copy, 1.-weight, temp_copy, weight, 0, middle);
+            // dig a hole in the background
+            cv::rectangle(background_copy, min_pt_cv + cv::Point(offset, offset), max_pt_cv + cv::Point(offset, offset), color,
+                          line_width);
+            // use a background to keep other content no change
+            cv::addWeighted(background_copy, weight, middle, 1, 0, canvas_);
+
+        } else {
+            cv::rectangle(canvas_, min_pt_cv + cv::Point(offset, offset), max_pt_cv + cv::Point(offset, offset), color,
+                          line_width);
+        }
     }
 
 
@@ -81,9 +98,26 @@ namespace freeNav {
         drawPointInt(pti[0], pti[1], color);
     }
 
-    void Canvas::drawCircleInt(int x, int y, int radius, bool center_offset, int line_width, const cv::Scalar &color) {
+    void Canvas::drawCircleInt(int x, int y, int radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
-        cv::circle(canvas_, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius, color, line_width, cv::LINE_AA);
+        if(weight < 1.0) {
+            cv::Mat temp_copy(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(0));
+            cv::Mat background_copy = canvas_.clone();
+            // draw transparent shapes
+            cv::circle(temp_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+                       color, line_width, cv::LINE_AA);
+            cv::Mat middle;
+            cv::addWeighted(background_copy, 1.-weight, temp_copy, weight, 0, middle);
+            // dig a hole in the background
+            cv::circle(background_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+                       cv::Vec3b::all(0), line_width, cv::LINE_AA);
+            // use a background to keep other content no change
+            cv::addWeighted(background_copy, weight, middle, 1, 0, canvas_);
+
+        } else {
+            cv::circle(canvas_, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+                       color, line_width, cv::LINE_AA);
+        }
     }
 
     void Canvas::drawCircleInt(const Fraction& x, const Fraction& y, int radius, bool center_offset, int line_width, const cv::Scalar &color) {

@@ -300,9 +300,12 @@ public:
         back_thread.detach();
     }
 
-    float getCurrentMemoryUsage() const {
+    float getCurrentMemoryUsage() {
         int current_pid = GetCurrentPid(); // or you can set a outside program pid
         float memory_usage = GetMemoryUsage(current_pid);
+        mutex_.lock();
+        used_memory_.push_back(memory_usage);
+        mutex_.unlock();
         return memory_usage;
     }
 

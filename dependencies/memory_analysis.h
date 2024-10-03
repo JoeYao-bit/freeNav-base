@@ -223,46 +223,59 @@ inline float GetCpuUsageRatio(int pid)
 // get specific process physical memeory occupation size by pid (MB)
 inline float GetMemoryUsage(int pid)
 {
-#ifdef WIN32
-    uint64_t mem = 0, vmem = 0;
-    PROCESS_MEMORY_COUNTERS pmc;
+//#ifdef WIN32
+//    uint64_t mem = 0, vmem = 0;
+//    PROCESS_MEMORY_COUNTERS pmc;
+//
+//    // get process hanlde by pid
+//    HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+//    if (GetProcessMemoryInfo(process, &pmc, sizeof(pmc)))
+//    {
+//        mem = pmc.WorkingSetSize;
+//        vmem = pmc.PagefileUsage;
+//    }
+//    CloseHandle(process);
+//
+//    // use GetCurrentProcess() can get current process and no need to close handle
+//
+//    // convert mem from B to MB
+//    return mem / 1024.0 / 1024.0;
+//
+//#else
+//    char file_name[64] = { 0 };
+//    FILE* fd;
+//    char line_buff[512] = { 0 };
+//    sprintf(file_name, "/proc/%d/status", pid);
+//
+//    fd = fopen(file_name, "r");
+//    if (nullptr == fd)
+//        return 0;
+//
+//    char name[64];
+//    int vmrss = 0;
+//    for (int i = 0; i < VMRSS_LINE - 1; i++)
+//        fgets(line_buff, sizeof(line_buff), fd);
+//
+//    fgets(line_buff, sizeof(line_buff), fd);
+//    sscanf(line_buff, "%s %d", name, &vmrss);
+//    fclose(fd);
+//
+//    // cnvert VmRSS from KB to MB
+//    return vmrss / 1024.0;
+//#endif
 
-    // get process hanlde by pid
-    HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-    if (GetProcessMemoryInfo(process, &pmc, sizeof(pmc)))
-    {
-        mem = pmc.WorkingSetSize;
-        vmem = pmc.PagefileUsage;
+    FILE* fp = fopen("/proc/self/status", "r");
+    char line[128];
+    while(fgets(line, 128,fp) != NULL) {
+        if(strncmp(line, "VmRSS:", 6) == 0) {
+            //std::cout << "mem size " << atoi(line + 6) << std::endl;
+            fclose(fp);
+            return atoi(line + 6)/1024.0;
+        }
     }
-    CloseHandle(process);
+    fclose(fp);
+    return 0.;
 
-    // use GetCurrentProcess() can get current process and no need to close handle
-
-    // convert mem from B to MB
-    return mem / 1024.0 / 1024.0;
-
-#else
-    char file_name[64] = { 0 };
-    FILE* fd;
-    char line_buff[512] = { 0 };
-    sprintf(file_name, "/proc/%d/status", pid);
-
-    fd = fopen(file_name, "r");
-    if (nullptr == fd)
-        return 0;
-
-    char name[64];
-    int vmrss = 0;
-    for (int i = 0; i < VMRSS_LINE - 1; i++)
-        fgets(line_buff, sizeof(line_buff), fd);
-
-    fgets(line_buff, sizeof(line_buff), fd);
-    sscanf(line_buff, "%s %d", name, &vmrss);
-    fclose(fd);
-
-    // cnvert VmRSS from KB to MB
-    return vmrss / 1024.0;
-#endif
 }
 
 // record how the memory use
@@ -287,9 +300,12 @@ public:
         back_thread.detach();
     }
 
-    float getCurrentMemoryUsage() const {
+    float getCurrentMemoryUsage() {
         int current_pid = GetCurrentPid(); // or you can set a outside program pid
         float memory_usage = GetMemoryUsage(current_pid);
+        mutex_.lock();
+        used_memory_.push_back(memory_usage);
+        mutex_.unlock();
         return memory_usage;
     }
 

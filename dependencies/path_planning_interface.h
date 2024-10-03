@@ -6,7 +6,7 @@
 #define FREENAV_BASE_PATH_PLANNING_INTERFACE_H
 
 #include "../basic_elements/point.h"
-
+#include <ctime>
 namespace freeNav {
 
     typedef std::vector<double> Statistic; // a method's Statistic

@@ -18,6 +18,7 @@
 #include <functional>
 #include <initializer_list>
 #include <assert.h>
+#include <memory>
 
 #include "../basic_elements/fraction_imported.h"
 
@@ -304,9 +305,11 @@ namespace freeNav {
 
     template <Dimension N> using Pointi = Point<int, N>;
     template <Dimension N> using PointF = Point<Fraction, N>;
+    template <Dimension N> using Pointf = Point<float, N>;
     template <Dimension N> using Pointd = Point<double, N>;
     template <Dimension N> using Neightbor = std::vector<Pointi<N>>;
     template <Dimension N> using Pointis = std::vector<Pointi<N>>;
+    template <Dimension N> using Pointfs = std::vector<Pointf<N>>;
     template <Dimension N> using Pointds = std::vector<Pointd<N>>;
 
 
@@ -636,7 +639,7 @@ namespace freeNav {
     }
 
     template <Dimension N>
-    Id PointiToId(const Pointi<N> &pt, DimensionLength* dimension_info) {
+    Id PointiToId(const Pointi<N> &pt, const DimensionLength* dimension_info) {
         Id index(pt[0]);
         Id buff(dimension_info[0]);
         for(unsigned long int i=1; i<N; i++) {
@@ -733,7 +736,7 @@ namespace freeNav {
         buff.shrink_to_fit();
         Pointi<N> zero;
         for(const Pointi<N>& offset : buff) {
-            if(DistBetween(offset, zero) < inflation_radiu)
+            if(DistBetween(offset, zero) <= inflation_radiu)
                 inflation_offset.push_back(offset);
         }
         inflation_offset.shrink_to_fit();
@@ -904,19 +907,61 @@ namespace freeNav {
         return true;
     }
 
+    template <typename T, Dimension N>
+    struct Pose {
+        Pose(Point<T, N> pt, int orient) : pt_(pt), orient_(orient) {}
+
+        Pose() : pt_(Pointi<N>()), orient_(0) {}
+
+        Point<T, N> pt_;
+
+        // for a N dimensional space, there are 2*N orientation
+        // e.g., 0,1,2,3 for 2D, 0,1,2,3,4,5,6,7 for 3D
+        // int orient are equal to a orthogonal vector:
+        // e.g., 2D: 0 -> (1, 0),    1 -> (-1, 0),    2 -> (0, 1),    3 -> (0, -1)
+        //       3D: 0 -> (1, 0, 0), 1 -> (-1, 0, 0), 2 -> (0, 1, 0), 3 -> (0, -1, 0), 4 -> (0, 0, 1), 5 -> (0, 0, -1),
+        int orient_ = 0;
+
+    };
+
+    template <typename T, Dimension N>
+    std::ostream & operator<<(std::ostream &out, const Pose<T, N>& pose) {
+        out << pose.pt_ << "[" << pose.orient_ << "]";
+        return out;
+    }
+    template <typename T, Dimension N>
+    using PosePtr = std::shared_ptr<Pose<T, N> >;
+
     template <Dimension N>
     using Instance = std::pair<Pointi<N>, Pointi<N> >;
+
+    template <Dimension N>
+    using InstanceOrient = std::pair<Pose<int, N>, Pose<int, N> >;
 
     template <Dimension N>
     using Instances = std::vector<Instance<N> >;
 
     template <Dimension N>
+    using InstanceOrients = std::vector<InstanceOrient<N> >;
+
+    template <Dimension N>
     using InstancesS = std::vector<Instances<N> >;
+
+    template <Dimension N>
+    using InstanceOrientsS = std::vector<InstanceOrients<N> >;
 
     template <Dimension N>
     std::ostream& operator << (std::ostream& os, const Instances<N>& ists) {
         for(const Instance<N>& ist : ists) {
             os << "(" << ist.first << "->" << ist.second << ")";
+        }
+        return os;
+    }
+
+    template <typename T>
+    std::ostream& operator << (std::ostream& os, const std::set<T>& set_of_t) {
+        for(const auto& t : set_of_t) {
+            os << t << " ";
         }
         return os;
     }

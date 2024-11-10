@@ -106,6 +106,10 @@ include_directories(${EIGEN3_INCLUDE_DIRS}
                     ${CMAKE_SOURCE_DIR}
         )
 
+INSTALL(DIRECTORY basic_elements DESTINATION include/freeNav-base)
+INSTALL(DIRECTORY dependencies DESTINATION include/freeNav-base)
+
+
 set(G2O_LIBS
         g2o_cli
         g2o_ext_freeglut_minimal

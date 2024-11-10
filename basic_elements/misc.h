@@ -6,7 +6,7 @@
 #define FREENAV_BASE_MISC_H
 
 
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 #include <boost/utility.hpp>
 #include <boost/type_traits.hpp>
 #include <vector>

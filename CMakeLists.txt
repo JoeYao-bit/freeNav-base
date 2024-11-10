@@ -50,6 +50,8 @@ add_library(freeNav-base ${3d_vis_src} ${canvas_src} ${qt_src}
         ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src}
          )
 
+
+
 set(EXTERNAL_LIBS
         gtest
         glog
@@ -61,6 +63,6 @@ set(EXTERNAL_LIBS
 target_link_libraries(freeNav-base ${EXTERNAL_LIBS})
 
 
-
+INSTALL (TARGETS freeNav-base freeNav-base LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 

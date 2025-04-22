@@ -135,8 +135,8 @@ namespace freeNav {
             return val;
         }
 
-        Point<T, N> operator/(const Fraction &f) const {
-            Point<T, N> val;
+        Point<Fraction, N> operator/(const Fraction &f) const {
+            Point<Fraction, N> val;
             for (uint i = 0; i < N; i++) {
                 val[i] += val_[i] / f;
             }

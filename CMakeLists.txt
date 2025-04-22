@@ -108,6 +108,7 @@ include_directories(${EIGEN3_INCLUDE_DIRS}
 
 INSTALL(DIRECTORY basic_elements DESTINATION include/freeNav-base)
 INSTALL(DIRECTORY dependencies DESTINATION include/freeNav-base)
+INSTALL(DIRECTORY visualization DESTINATION include/freeNav-base)
 
 
 set(G2O_LIBS

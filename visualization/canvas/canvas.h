@@ -159,14 +159,14 @@ namespace freeNav {
             canvas_ = canvas;
         }
 
+        /* how many pixel corresponding to 1 meter */
+        double resolution_;
+
     private:
 
         std::vector<cv::Scalar> gradation_color_table_;
 
         cv::Mat canvas_;
-
-        /* how many pixel corresponding to 1 meter */
-        double resolution_;
 
         /* center of the real world coordinate */
         Pointi<2> center_;

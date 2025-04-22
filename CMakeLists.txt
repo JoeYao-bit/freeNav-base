@@ -147,7 +147,7 @@ aux_source_directory(dependencies/massive_scene_loader  mass_src)
 
 add_library(freeNav-base ${3d_vis_src} ${canvas_src} ${qt_src}
                     ${basic_src}
-        ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src}
+        ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src} basic_elements/pose_se2.cpp
          )
 
 set(EXTERNAL_LIBS

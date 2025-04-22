@@ -2,7 +2,7 @@
 // Created by yaozhuo on 2021/9/20.
 //
 
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include "canvas.h"
 #include "iomanip"
 namespace freeNav {

@@ -32,6 +32,7 @@ include(GoogleTest)
 include_directories(
                     ${CMAKE_SOURCE_DIR}
                     ${Boost_INCLUDE_DIRS}
+)
 
 INSTALL(DIRECTORY basic_elements DESTINATION include/freeNav-base)
 INSTALL(DIRECTORY dependencies DESTINATION include/freeNav-base)
@@ -75,7 +76,7 @@ aux_source_directory(dependencies/3d_textmap  3d_textmap_src)
 aux_source_directory(dependencies/massive_scene_loader  mass_src)
 
 
-add_library(canvas_ex ${canvas_src} ${2d_grid_src} ${mass_src} basic_elements/pose_se2.cpp)
+add_library(canvas_ex ${canvas_src} ${2d_grid_src} ${mass_src})
 INSTALL (TARGETS canvas_ex canvas_ex LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 #target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})
 

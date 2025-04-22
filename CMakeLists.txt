@@ -106,6 +106,10 @@ include_directories(${EIGEN3_INCLUDE_DIRS}
                     ${CMAKE_SOURCE_DIR}
         )
 
+INSTALL(DIRECTORY basic_elements DESTINATION include/freeNav-base)
+INSTALL(DIRECTORY dependencies DESTINATION include/freeNav-base)
+
+
 set(G2O_LIBS
         g2o_cli
         g2o_ext_freeglut_minimal
@@ -142,7 +146,8 @@ aux_source_directory(dependencies/3d_textmap  3d_textmap_src)
 aux_source_directory(dependencies/massive_scene_loader  mass_src)
 
 
-#add_library(harrt_src_lib ${harrt_src})
+add_library(canvas_ex ${canvas_src} ${2d_grid_src} ${mass_src} basic_elements/pose_se2.cpp)
+INSTALL (TARGETS canvas_ex canvas_ex LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 #target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})
 
 add_library(freeNav-base ${3d_vis_src} ${canvas_src} ${qt_src}

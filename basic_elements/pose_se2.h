@@ -5,7 +5,7 @@
 #ifndef FREENAV_BASE_POSE_SE2_H
 #define FREENAV_BASE_POSE_SE2_H
 
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 #include <iostream>
 #include <g2o/stuff/misc.h>
 

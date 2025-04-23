@@ -25,7 +25,7 @@ namespace freeNav {
         /* e default (0, 0) is the center of the map */
         //explicit Canvas(std::string name, int resolution);
 
-        void drawLineInt(int x1, int y1, int x2, int y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
+        void drawLineInt(float x1, float y1, float x2, float y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawLineFloat(float x1, float y1, float x2, float y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
@@ -40,7 +40,7 @@ namespace freeNav {
 
         void drawPoint(double x1, double y1, const cv::Vec3b &color = cv::Vec3b(0, 0, 0));
 
-        void drawCircleInt(int x, int y, int radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
+        void drawCircleInt(float x, float y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
 
         void drawCircleInt(const Fraction& x, const Fraction& y, int radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
@@ -144,6 +144,15 @@ namespace freeNav {
             v[1] = center_[1] - y * resolution_;
             return v;
         }
+
+        template <typename T>
+        Pointf<2> transformToPixelFloat(T x, T y) {
+            Pointf<2> v;
+            v[0] = center_[0] + x * resolution_;
+            v[1] = center_[1] - y * resolution_;
+            return v;
+        }
+
         void setMouseCallBack(void (*func)(int, int, int, int, void *));
 
         /* default FPS set to 30 */
@@ -159,14 +168,16 @@ namespace freeNav {
             canvas_ = canvas;
         }
 
+        /* how many pixel corresponding to 1 meter */
+        double resolution_;
+
     private:
 
         std::vector<cv::Scalar> gradation_color_table_;
 
         cv::Mat canvas_;
 
-        /* how many pixel corresponding to 1 meter */
-        double resolution_;
+
 
         /* center of the real world coordinate */
         Pointi<2> center_;

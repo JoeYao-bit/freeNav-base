@@ -50,8 +50,8 @@ TEST(CANVASTEST, test) {
         canvas.resetCanvas();
         canvas.drawEmptyGrid();
         canvas.drawGridMap(dimension, is_occupied_func);
-        canvas.drawCircleInt(pt1[0], pt1[1], 5, center_offset, -1, COLOR_TABLE[0]);
-        canvas.drawCircleInt(pt2[0], pt2[1], 5, center_offset, -1, COLOR_TABLE[1]);
+        canvas.drawCircleInt((float)pt1[0], (float)pt1[1], (float)5, center_offset, -1, COLOR_TABLE[0]);
+        canvas.drawCircleInt((float)pt2[0], (float)pt2[1], (float)5, center_offset, -1, COLOR_TABLE[1]);
         canvas.drawArrowInt(pt1[0], pt1[1], pt2[0], pt2[1], 2, center_offset, COLOR_TABLE[1]);
         canvas.show();
     }

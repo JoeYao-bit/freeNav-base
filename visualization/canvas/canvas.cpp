@@ -30,8 +30,8 @@ namespace freeNav {
                                       reverse_color_table.end());
     }
 
-    void Canvas::drawLineInt(int x1, int y1, int x2, int y2, bool center_offset, int line_width, const cv::Scalar &color) {
-        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+    void Canvas::drawLineInt(float x1, float y1, float x2, float y2, bool center_offset, int line_width, const cv::Scalar &color) {
+        float offset = center_offset ? .5 * zoom_ratio_ : 0;
         cv::line(canvas_,
                  cv::Point2i(x1 * zoom_ratio_, y1 * zoom_ratio_) + cv::Point(offset, offset),
                  cv::Point2i(x2 * zoom_ratio_, y2 * zoom_ratio_) + cv::Point(offset, offset),
@@ -84,8 +84,8 @@ namespace freeNav {
     }
 
     void Canvas::drawLine(double x1, double y1, double x2, double y2, int line_width, bool center_offset, const cv::Scalar &color) {
-        Pointi<2> pti1 = transformToPixel(x1, y1);
-        Pointi<2> pti2 = transformToPixel(x2, y2);
+        Pointf<2> pti1 = transformToPixelFloat(x1, y1);
+        Pointf<2> pti2 = transformToPixelFloat(x2, y2);
         drawLineInt(pti1[0], pti1[1], pti2[0], pti2[1], center_offset, line_width, color);
     }
 
@@ -98,7 +98,7 @@ namespace freeNav {
         drawPointInt(pti[0], pti[1], color);
     }
 
-    void Canvas::drawCircleInt(int x, int y, int radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
+    void Canvas::drawCircleInt(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         if(weight < 1.0) {
             cv::Mat temp_copy(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(0));
@@ -127,8 +127,9 @@ namespace freeNav {
     }
 
     void Canvas::drawCircle(double x, double y, double radius, int line_width, const cv::Scalar &color) {
-        Pointi<2> pti = transformToPixel(x, y);
-        int radius_i = radius * resolution_;
+        Pointf<2> pti = transformToPixelFloat(x, y);
+        float radius_i = radius * resolution_;
+//        std::cout << "pti = " << pti << ", radius_i = " << radius_i << std::endl;
         drawCircleInt(pti[0], pti[1], radius_i, false, line_width, color);
     }
 
@@ -327,7 +328,7 @@ namespace freeNav {
     void Canvas::drawPointiCircles(const freeNav::Pointis<2> &pts, const cv::Vec3b &color, int radius, int line_width) {
         for (const auto &pt : pts) {
             //drawGrid(pt.second->pt_[0], pt.second->pt_[1], color);
-            drawCircleInt(pt[0], pt[1], radius, false, line_width, cv::Scalar(color[0], color[1], color[2]));
+            drawCircleInt((float)pt[0], (float)pt[1], (float)radius, false, line_width, cv::Scalar(color[0], color[1], color[2]));
             //drawTextInt(pt.second->pt_[0], pt.second->pt_[1], std::to_string(pt.second->surface_id_).c_str(), cv::Scalar::all(0));
         }
     }

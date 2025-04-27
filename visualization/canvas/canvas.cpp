@@ -285,8 +285,8 @@ namespace freeNav {
                  cv::Point2f((x1 + offset) * zoom_ratio_, (y1 + offset) * zoom_ratio_),
                  cv::Point2f((x2 + offset) * zoom_ratio_, (y2 + offset) * zoom_ratio_),
                  color, line_width, cv::LINE_AA);
-        cv::circle(canvas_, cv::Point2f((x1 + offset) * zoom_ratio_, (y1 + offset) * zoom_ratio_), 2, color, -1);
-        cv::circle(canvas_, cv::Point2f((x2 + offset) * zoom_ratio_, (y2 + offset) * zoom_ratio_), 2, color, -1);
+//        cv::circle(canvas_, cv::Point2f((x1 + offset) * zoom_ratio_, (y1 + offset) * zoom_ratio_), 2, color, -1);
+//        cv::circle(canvas_, cv::Point2f((x2 + offset) * zoom_ratio_, (y2 + offset) * zoom_ratio_), 2, color, -1);
 
     }
 

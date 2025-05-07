@@ -24,6 +24,90 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 endif()
 
+#set(OpenCV_INCLUDE_DIRS "/usr/include/opencv4")
+
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(G2O REQUIRED)
+find_package(Glog REQUIRED)
+find_package(SUITESPARSE REQUIRED)
+find_package(Octomap REQUIRED)
+find_package(Pangolin REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(CGAL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options system filesystem thread graph)
+#find_package(OMPL REQUIRED)
+find_package(LibXml2)
+find_package(argparse)
+
+
+if( NOT LIBXML2_FOUND )
+    message( FATAL_ERROR "libxml2 not found\n" )
+    return()
+endif()
+
+find_package(Python3 COMPONENTS Interpreter Development)
+
+message ( STATUS "Python3_FOUND = ${Python3_FOUND} " )
+message ( STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS} " )
+message ( STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES} " )
+
+include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${YAML_CPP_INCLUDE_DIR})
+include_directories(${OMPL_INCLUDE_DIRS})
+include_directories(${CGAL_INCLUDE_DIRS})
+include_directories(${LIBXML2_INCLUDE_DIR})
+include_directories(${Python3_INCLUDE_DIRS})
+include_directories(${argparse_INCLUDE_DIRS})
+
+if(POLICY CMP0072)
+    set(OpenGL_GL_PREFERENCE "GLVND")
+endif()
+#########################################################
+# FIND GLUT
+#########################################################
+find_package(GLUT REQUIRED)
+include_directories(${GLUT_INCLUDE_DIRS})
+link_directories(${GLUT_LIBRARY_DIRS})
+add_definitions(${GLUT_DEFINITIONS})
+if(NOT GLUT_FOUND)
+    message(ERROR " GLUT not found!")
+endif(NOT GLUT_FOUND)
+#########################################################
+# FIND OPENGL
+#########################################################
+find_package(OpenGL REQUIRED)
+find_package(Octomap REQUIRED)
+include_directories(${OpenGL_INCLUDE_DIRS})
+link_directories(${OpenGL_LIBRARY_DIRS})
+add_definitions(${OpenGL_DEFINITIONS})
+if(NOT OPENGL_FOUND)
+    message(ERROR " OPENGL not found!")
+endif(NOT OPENGL_FOUND)
+
+option(ENABLE_LOG "whether enable log" ON)
+IF(ENABLE_LOG)
+    message(STATUS "Enable log print for debug" )
+    add_definitions( -DENABLE_LOG)
+ENDIF(ENABLE_LOG)
+
+include_directories(
+        #SYSTEM
+        ${CSPARSE_INCLUDE_DIR}
+        ${SUITESPARSE_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${OCTOMAP_DIRS}
+)
+
+include(GoogleTest)
+
+
+include_directories(${EIGEN3_INCLUDE_DIRS}
+        ${G2O_INCLUDE_DIR}
+        ${GLOG_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}
+        )
 
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem thread graph)
 
@@ -83,14 +167,33 @@ INSTALL (TARGETS canvas_ex canvas_ex LIBRARY DESTINATION lib ARCHIVE DESTINATION
 add_library(freeNav-base ${3d_vis_src} ${canvas_src} ${qt_src}
                     ${basic_src}
         ${depen_src} ${2d_grid_src} ${3d_octomap_src} ${3d_textmap_src} ${mass_src}
+        basic_elements/pose_se2.cpp
          )
 
 set(EXTERNAL_LIBS
+        ${QT_LIBS}
+        ${SUITESPARSE_LIBRARIES}
+        ${EIGEN3_LIBS}
+        ${OpenCV_LIBS}
         gtest
         glog
         gtest_main
         pthread
+        ${G2O_LIBS}
+        ${CSPARSE_LIB}
+        ${OCTOMAP_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${GLUT_LIBRARY}
+        ${Pangolin_LIBRARIES}
+        #${CGAL_LIBRARIES} # cause /usr/local/include/g2o/core/base_fixed_sized_edge.hpp:168:33: error: ‘(1.0e+0 / 2.0000000000000001e-9)’ is not a constant expression
+        ${yaml-cpp}
         ${Boost_LIBRARIES}
+        #${LIBXML2}
+        #${DSL_LIBRARY}
+        LibXml2::LibXml2
+        ${Python3_LIBRARIES}
+        /usr/local/lib/libkahypar.so
+        ${argparse_lib}
         )
 
 target_link_libraries(freeNav-base ${EXTERNAL_LIBS})

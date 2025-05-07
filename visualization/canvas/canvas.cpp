@@ -14,7 +14,7 @@ namespace freeNav {
         name_ = name;
         zoom_ratio_ = zoom_ratio;
         setColorTable();
-        cv::namedWindow(name_, CV_WINDOW_NORMAL);
+        cv::namedWindow(name_, cv::WINDOW_NORMAL);
     }
 
     void Canvas::setColorTable() {

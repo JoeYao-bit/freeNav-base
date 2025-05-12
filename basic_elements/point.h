@@ -44,6 +44,15 @@ namespace freeNav {
 
     const Time MIN_TIME = 0;
 
+    template<Dimension N>
+    std::string printDimInfo(DimensionLength* dim) {
+        std::stringstream ss;
+        for(int i=0; i<N; i++) {
+            ss << dim[i] << " ";
+        }
+        return ss.str();
+    }
+
     template<typename KEY>
     KEY MAX = std::numeric_limits<KEY>::max();
 
@@ -161,6 +170,14 @@ namespace freeNav {
 
         Point<double, N> multi(const double f) const {
             Point<double, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] = val_[i] * f;
+            }
+            return val;
+        }
+
+        Point<T, N> multi(const int f) const {
+            Point<T, N> val;
             for (uint i = 0; i < N; i++) {
                 val[i] = val_[i] * f;
             }

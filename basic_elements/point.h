@@ -176,6 +176,14 @@ namespace freeNav {
             return val;
         }
 
+        Point<T, N> multi(const int f) const {
+            Point<T, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] = val_[i] * f;
+            }
+            return val;
+        }
+
         Point<T, N> multi(const Point<T, N>& pt) const {
             Point<T, N> val;
             for (uint i = 0; i < N; i++) {

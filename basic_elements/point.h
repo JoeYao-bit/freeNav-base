@@ -66,6 +66,15 @@ namespace freeNav {
         return min_dim;
     }
 
+    template<Dimension N>
+    std::string printDimInfo(DimensionLength* dim) {
+        std::stringstream ss;
+        for(int i=0; i<N; i++) {
+            ss << dim[i] << " ";
+        }
+        return ss.str();
+    }
+
     // Point to store surface point information
     template<typename T, Dimension N>
     struct Point {

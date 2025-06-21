@@ -43,7 +43,7 @@ aux_source_directory(dependencies/massive_scene_loader  mass_src)
 
 INSTALL(DIRECTORY basic_elements DESTINATION include/freeNav-base)
 INSTALL(DIRECTORY dependencies DESTINATION include/freeNav-base)
-INSTALL(DIRECTORY visualization DESTINATION include/freeNav-base)
+
 
 #add_library(harrt_src_lib ${harrt_src})
 #target_link_libraries(harrt_src_lib ${OpenCV_LIBS} ${CGAL_LIBRARIES})

@@ -152,6 +152,14 @@ namespace freeNav {
             return val;
         }
 
+        Point<T, N> operator/(const int &f) const {
+            Point<T, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] += val_[i] / f;
+            }
+            return val;
+        }
+
         T maxDim() {
             T maximum = MIN<T>;
             for(int dim=0; dim<N; dim++) {

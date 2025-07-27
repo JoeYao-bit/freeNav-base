@@ -207,6 +207,34 @@ namespace freeNav {
             return true;
         }
 
+        bool operator>(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] <= pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator<(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] >= pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator>=(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] < pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator<=(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] > pt[i]) return false;
+            }
+            return true;
+        }
+
         void operator=(const Point<T, N-1> &pt) {
             for (uint i = 0; i < N-1; i++) {
                 val_[i] = pt[i];
@@ -625,6 +653,15 @@ namespace freeNav {
         Id total_index = 1;
         for(int i = 0; i < N; i++) {
             total_index *= dimension_info[i];
+        }
+        return total_index;
+    }
+
+    template <Dimension N>
+    int getTotalIndexOfSpace(const Pointi<N>& pt) {
+        int total_index = 1;
+        for(int i = 0; i < N; i++) {
+            total_index *= pt[i];
         }
         return total_index;
     }

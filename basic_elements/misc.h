@@ -10,6 +10,7 @@
 #include <boost/utility.hpp>
 #include <boost/type_traits.hpp>
 #include <vector>
+#include <chrono>
 
 
 #define SMALL_NUM 0.00000001
@@ -112,5 +113,23 @@
     template<typename T>
     inline const T& get_const_reference(const T& val, typename boost::disable_if<boost::is_pointer<T> >::type* dummy = 0) {return val;}
 
+
+    struct MSTimer {
+        MSTimer() {
+            start_time_ = std::chrono::steady_clock::now();
+        }
+
+        int elapsed() {
+            end_time_ = std::chrono::steady_clock::now();
+            return std::chrono::duration_cast<std::chrono::milliseconds>(end_time_ - start_time_).count();
+        }
+
+        void reset() {
+            start_time_ = std::chrono::steady_clock::now();
+        }
+
+        std::chrono::steady_clock::time_point start_time_;
+        std::chrono::steady_clock::time_point end_time_;
+    };
 
 #endif //FREENAV_MISC_H

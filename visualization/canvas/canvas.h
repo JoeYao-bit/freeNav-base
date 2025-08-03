@@ -18,7 +18,7 @@ namespace freeNav {
     public:
 
         // m ratio must be integer that greater than 1
-        explicit Canvas(std::string name, int size_x, int size_y, double resolution, int zoom_ratio = 1);
+        explicit Canvas(std::string name, int size_x, int size_y, double resolution, double zoom_ratio = 1);
 
         void setColorTable();
 
@@ -76,7 +76,8 @@ namespace freeNav {
                           const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawGridMap(freeNav::DimensionLength *dimension,
-                         IS_OCCUPIED_FUNC<2> is_occupied);
+                         IS_OCCUPIED_FUNC<2> is_occupied,
+                         const cv::Vec3b &color = cv::Vec3b(0, 0, 0));
 
         void drawGridMap(const freeNav::MapDownSampler<2>& down_sampler, int down_sample_level);
 

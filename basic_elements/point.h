@@ -44,6 +44,15 @@ namespace freeNav {
 
     const Time MIN_TIME = 0;
 
+    template<Dimension N>
+    std::string printDimInfo(DimensionLength* dim) {
+        std::stringstream ss;
+        for(int i=0; i<N; i++) {
+            ss << dim[i] << " ";
+        }
+        return ss.str();
+    }
+
     template<typename KEY>
     KEY MAX = std::numeric_limits<KEY>::max();
 
@@ -64,15 +73,6 @@ namespace freeNav {
             }
         }
         return min_dim;
-    }
-
-    template<Dimension N>
-    std::string printDimInfo(DimensionLength* dim) {
-        std::stringstream ss;
-        for(int i=0; i<N; i++) {
-            ss << dim[i] << " ";
-        }
-        return ss.str();
     }
 
     // Point to store surface point information
@@ -144,7 +144,15 @@ namespace freeNav {
             return val;
         }
 
-        Point<T, N> operator/(const Fraction &f) const {
+        Point<Fraction, N> operator/(const Fraction &f) const {
+            Point<Fraction, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] += val_[i] / f;
+            }
+            return val;
+        }
+
+        Point<T, N> operator/(const int &f) const {
             Point<T, N> val;
             for (uint i = 0; i < N; i++) {
                 val[i] += val_[i] / f;
@@ -195,6 +203,34 @@ namespace freeNav {
         bool operator==(const Point &pt) const {
             for (uint i = 0; i < N; i++) {
                 if (val_[i] != pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator>(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] <= pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator<(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] >= pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator>=(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] < pt[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator<=(const Point &pt) const {
+            for (uint i = 0; i < N; i++) {
+                if (val_[i] > pt[i]) return false;
             }
             return true;
         }
@@ -617,6 +653,15 @@ namespace freeNav {
         Id total_index = 1;
         for(int i = 0; i < N; i++) {
             total_index *= dimension_info[i];
+        }
+        return total_index;
+    }
+
+    template <Dimension N>
+    int getTotalIndexOfSpace(const Pointi<N>& pt) {
+        int total_index = 1;
+        for(int i = 0; i < N; i++) {
+            total_index *= pt[i];
         }
         return total_index;
     }

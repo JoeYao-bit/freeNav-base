@@ -272,6 +272,7 @@ namespace freeNav {
         if (x < 0 || x >= canvas_.cols / zoom_ratio_ || y < 0 || y >= canvas_.rows / zoom_ratio_) return;
         for (int i = x * zoom_ratio_; i < (x + 1) * zoom_ratio_; i++) {
             for (int j = y * zoom_ratio_; j < (y + 1) * zoom_ratio_; j++) {
+                if(i < 0 || i >= canvas_.cols || j < 0 || j >= canvas_.rows) { continue; }
                 canvas_.at<cv::Vec3b>(j, i) = color;
             }
         }

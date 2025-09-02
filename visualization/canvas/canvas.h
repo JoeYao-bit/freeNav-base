@@ -33,27 +33,32 @@ namespace freeNav {
 
         void drawLineInt(const Fraction& x1, const Fraction& y1, const Fraction& x2, const Fraction& y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
-        void drawLine(double x1, double y1, double x2, double y2, int line_width = 1, bool center_offset = true,
+        void drawLine(float x1, float y1, float x2, float y2, int line_width = 1, bool center_offset = true,
                       const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawPointInt(int x, int y, const cv::Vec3b &color = cv::Vec3b(0, 0, 0));
 
-        void drawPoint(double x1, double y1, const cv::Vec3b &color = cv::Vec3b(0, 0, 0));
+        void drawPoint(float x1, float y1, const cv::Vec3b &color = cv::Vec3b(0, 0, 0));
 
-        void drawCircleInt(int x, int y, int radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
+        void drawCircleInt(int x, int y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
 
-        void drawCircleInt(const Fraction& x, const Fraction& y, int radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
+        void drawCircleFloat(float x, float y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
 
-        void drawCircle(double x1, double y1, double radius, int line_width = 1,
+        void drawCircleInt(const Fraction& x, const Fraction& y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
+
+        void drawCircle(float x1, float y1, float radius, bool center_offset = true, int line_width = 1,
                         const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
-        void drawArrow(double x, double y, double theta, double arrow_length, int line_width = 1, bool center_offset = true,
+        void drawArrow(float x, float y, double theta, double arrow_length, int line_width = 1, bool center_offset = true,
                        const cv::Scalar &color = cv::Scalar::all(0));
 
         void drawArrowInt(int x, int y, double theta, double arrow_length, int line_width = 1,
                           bool center_offset = true, const cv::Scalar &color = cv::Scalar::all(0));
 
         void drawArrowInt(int x1, int y1, int x2, int y2, int line_width, bool center_offset,
+                          const cv::Scalar &color = cv::Scalar::all(0));
+
+        void drawArrowFloat(float x1, float y1, float x2, float y2, int line_width, bool center_offset,
                           const cv::Scalar &color = cv::Scalar::all(0));
 
         void drawPathf(const Pointds<2> &pathd, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
@@ -133,13 +138,13 @@ namespace freeNav {
 
 
         template <typename T>
-        Pointi<2> transformToPixel(const Point<T, 2> &pt)  {
+        Point<T, 2> transformToPixel(const Point<T, 2> &pt)  {
             return transformToPixel(pt[0], pt[1]);
         }
 
         template <typename T>
-        Pointi<2> transformToPixel(T x, T y) {
-            Pointi<2> v;
+        Point<T, 2> transformToPixel(T x, T y) {
+            Point<T, 2> v;
             v[0] = center_[0] + x * resolution_;
             v[1] = center_[1] - y * resolution_;
             return v;

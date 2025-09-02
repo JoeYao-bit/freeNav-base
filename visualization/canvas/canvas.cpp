@@ -83,22 +83,22 @@ namespace freeNav {
                  color, 1, cv::LINE_AA);
     }
 
-    void Canvas::drawLine(double x1, double y1, double x2, double y2, int line_width, bool center_offset, const cv::Scalar &color) {
-        Pointi<2> pti1 = transformToPixel(x1, y1);
-        Pointi<2> pti2 = transformToPixel(x2, y2);
-        drawLineInt(pti1[0], pti1[1], pti2[0], pti2[1], center_offset, line_width, color);
+    void Canvas::drawLine(float x1, float y1, float x2, float y2, int line_width, bool center_offset, const cv::Scalar &color) {
+        Pointf<2> pti1 = transformToPixel(x1, y1);
+        Pointf<2> pti2 = transformToPixel(x2, y2);
+        drawLineFloat(pti1[0], pti1[1], pti2[0], pti2[1], center_offset, line_width, color);
     }
 
     void Canvas::drawPointInt(int x, int y, const cv::Vec3b &color) {
         canvas_.at<cv::Vec3b>(x * zoom_ratio_, y * zoom_ratio_) = color;
     }
 
-    void Canvas::drawPoint(double x, double y, const cv::Vec3b &color) {
-        Pointi<2> pti = transformToPixel(x, y);
+    void Canvas::drawPoint(float x, float y, const cv::Vec3b &color) {
+        Pointf<2> pti = transformToPixel(x, y);
         drawPointInt(pti[0], pti[1], color);
     }
 
-    void Canvas::drawCircleInt(int x, int y, int radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
+    void Canvas::drawCircleInt(int x, int y, float radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         if(weight < 1.0) {
             cv::Mat temp_copy(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(0));
@@ -120,16 +120,22 @@ namespace freeNav {
         }
     }
 
-    void Canvas::drawCircleInt(const Fraction& x, const Fraction& y, int radius, bool center_offset, int line_width, const cv::Scalar &color) {
+    void Canvas::drawCircleInt(const Fraction& x, const Fraction& y, float radius, bool center_offset, int line_width, const cv::Scalar &color) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         int round_x = round(x.toFloat()*zoom_ratio_), round_y = round(y.toFloat()*zoom_ratio_);
         cv::circle(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset), radius, color, line_width, cv::LINE_AA);
     }
 
-    void Canvas::drawCircle(double x, double y, double radius, int line_width, const cv::Scalar &color) {
-        Pointi<2> pti = transformToPixel(x, y);
-        int radius_i = radius * resolution_;
-        drawCircleInt(pti[0], pti[1], radius_i, false, line_width, color);
+    void Canvas::drawCircle(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color) {
+        Pointf<2> pti = transformToPixel(x, y);
+        float radius_i = radius * resolution_;
+        drawCircleFloat(pti[0], pti[1], radius_i, center_offset, line_width, color);
+    }
+
+    void Canvas::drawCircleFloat(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+        int round_x = round(x*zoom_ratio_), round_y = round(y*zoom_ratio_);
+        cv::circle(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset), radius, color, line_width, cv::LINE_AA);
     }
 
     void Canvas::resetCanvas(const cv::Scalar &color) {
@@ -187,9 +193,9 @@ namespace freeNav {
     }
 
     void
-    Canvas::drawArrow(double x, double y, double theta, double arrow_length, int line_width, bool center_offset, const cv::Scalar &color) {
-        Pointi<2> pti = transformToPixel(x, y);
-        drawArrowInt(pti[0], pti[1], theta, arrow_length, line_width, center_offset, color);
+    Canvas::drawArrow(float x, float y, double theta, double arrow_length, int line_width, bool center_offset, const cv::Scalar &color) {
+        Pointf<2> ptf = transformToPixel(x, y);
+        drawArrowInt(ptf[0], ptf[1], theta, arrow_length, line_width, center_offset, color);
     }
 
     void
@@ -210,6 +216,15 @@ namespace freeNav {
                         p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .1);
     }
 
+    void
+    Canvas::drawArrowFloat(float x1, float y1, float x2, float y2, int line_width, bool center_offset, const cv::Scalar &color) {
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+        cv::Point p1(x1, y1);
+        cv::Point p2(x2, y2);
+        cv::arrowedLine(canvas_, p1 * zoom_ratio_ + cv::Point(offset, offset),
+                        p2 * zoom_ratio_ + cv::Point(offset, offset), color, line_width, cv::LINE_AA, 0, .1);
+    }
+
     void Canvas::drawPathf(const Pointds<2> &pathd, int line_width, const cv::Scalar &color) {
         if (pathd.empty()) return;
         for (int i = 0; i < pathd.size() - 1; i++) {
@@ -220,17 +235,17 @@ namespace freeNav {
     void Canvas::drawPointfs(const Pointds<2> &pathd, double radius, int line_width, const cv::Scalar &color) {
         if (pathd.empty()) return;
         for (int i = 0; i < pathd.size() - 1; i++) {
-            drawCircle(pathd[i][0], pathd[i][1], radius, line_width, color);
+            drawCircle(pathd[i][0], pathd[i][1], radius, line_width, true, color);
         }
-        drawCircle(pathd.back()[0], pathd.back()[1], radius, line_width, color);
+        drawCircle(pathd.back()[0], pathd.back()[1], radius, line_width, true, color);
     }
 
     void Canvas::drawPointfs(const std::vector<PoseSE2> &path, double radius, int line_width, const cv::Scalar &color) {
         if (path.empty()) return;
         for (int i = 0; i < path.size() - 1; i++) {
-            drawCircle(path[i].x(), path[i].y(), radius, line_width, color);
+            drawCircle(path[i].x(), path[i].y(), radius, line_width, true, color);
         }
-        drawCircle(path.back().x(), path.back().y(), radius, line_width, color);
+        drawCircle(path.back().x(), path.back().y(), radius, line_width, true, color);
     }
 
     void Canvas::drawPointfs(const std::vector<PoseSE2> &path, const std::vector<double>& time_diffs, double current_time,

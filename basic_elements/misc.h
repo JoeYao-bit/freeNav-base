@@ -132,4 +132,22 @@
         std::chrono::steady_clock::time_point end_time_;
     };
 
+    struct USTimer {
+        USTimer() {
+            start_time_ = std::chrono::steady_clock::now();
+        }
+
+        int elapsed() {
+            end_time_ = std::chrono::steady_clock::now();
+            return std::chrono::duration_cast<std::chrono::microseconds>(end_time_ - start_time_).count();
+        }
+
+        void reset() {
+            start_time_ = std::chrono::steady_clock::now();
+        }
+
+        std::chrono::steady_clock::time_point start_time_;
+        std::chrono::steady_clock::time_point end_time_;
+    };
+
 #endif //FREENAV_MISC_H

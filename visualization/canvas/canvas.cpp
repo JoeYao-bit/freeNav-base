@@ -7,7 +7,7 @@
 #include "iomanip"
 namespace freeNav {
 
-    Canvas::Canvas(std::string name, int size_x, int size_y, double resolution, int zoom_ratio) :
+    Canvas::Canvas(std::string name, int size_x, int size_y, double resolution, double zoom_ratio) :
             canvas_(size_y * zoom_ratio, size_x * zoom_ratio, CV_8UC3, cv::Scalar::all(255)), resolution_(resolution) {
         center_[0] = size_x / 2;
         center_[1] = size_y / 2;
@@ -287,6 +287,7 @@ namespace freeNav {
         if (x < 0 || x >= canvas_.cols / zoom_ratio_ || y < 0 || y >= canvas_.rows / zoom_ratio_) return;
         for (int i = x * zoom_ratio_; i < (x + 1) * zoom_ratio_; i++) {
             for (int j = y * zoom_ratio_; j < (y + 1) * zoom_ratio_; j++) {
+                if(i < 0 || i >= canvas_.cols || j < 0 || j >= canvas_.rows) { continue; }
                 canvas_.at<cv::Vec3b>(j, i) = color;
             }
         }
@@ -306,8 +307,9 @@ namespace freeNav {
 
 
     void Canvas::drawGridMap(freeNav::DimensionLength *dimension,
-                             IS_OCCUPIED_FUNC<2> is_occupied) {
-        if (dimension[0] > canvas_.cols * zoom_ratio_ || dimension[1] > canvas_.rows * zoom_ratio_) { return; }
+                             IS_OCCUPIED_FUNC<2> is_occupied,
+                             const cv::Vec3b &color) {
+        //if (dimension[0] > canvas_.cols * zoom_ratio_ || dimension[1] > canvas_.rows * zoom_ratio_) { return; }
         for (int i = 0; i < dimension[0]; i++) {
             for (int j = 0; j < dimension[1]; j++) {
                 freeNav::Pointi<2> pt;
@@ -315,7 +317,7 @@ namespace freeNav {
                 pt[1] = j;
                 if (is_occupied(pt)) {
                     //std::cout << pt << " is occ " << std::endl;
-                    drawGrid(i, j);
+                    drawGrid(i, j, color);
                 }
                 //else { std::cout << pt << " is free " << std::endl; }
             }

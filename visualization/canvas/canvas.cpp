@@ -176,6 +176,13 @@ namespace freeNav {
 
     }
 
+    void Canvas::drawRectangle(float x1, float y1, float x2, float y2, bool center_offset, int line_width, const cv::Scalar &color) {
+        drawLine(x1, y2, x2, y2, center_offset, line_width, color);
+        drawLine(x2, y2, x2, y1, center_offset, line_width, color);
+        drawLine(x2, y1, x1, y1, center_offset, line_width, color);
+        drawLine(x1, y1, x1, y2, center_offset, line_width, color);
+    }
+
     void Canvas::drawCircleFloat(float x, float y, float radius, bool center_offset, int line_width,
                                  const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;

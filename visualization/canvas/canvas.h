@@ -31,6 +31,8 @@ namespace freeNav {
 
         void drawRectangleFloat(const Pointf<2>& min_pt, const Pointf<2>& max_pt, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
 
+        void drawRectangle(float x1, float y1, float x2, float y2, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
+
         void drawLineInt(const Fraction& x1, const Fraction& y1, const Fraction& x2, const Fraction& y2, bool center_offset, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawLine(float x1, float y1, float x2, float y2, int line_width = 1, bool center_offset = true,

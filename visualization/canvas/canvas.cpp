@@ -132,10 +132,56 @@ namespace freeNav {
         drawCircleFloat(pti[0], pti[1], radius_i, center_offset, line_width, color);
     }
 
-    void Canvas::drawCircleFloat(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color, float weight) {
+    void Canvas::drawEclipseInt(float x1, float y1, float radius, float start_angle, float end_angle,
+                                bool center_offset, int line_width,
+                                const cv::Scalar &color) {
+        //     // 创建白色背景
+        //    Mat img = Mat::ones(400, 400, CV_8UC3) * 255;
+        //
+        //    Point center(200, 200);  // 圆心
+        //    Size axes(100, 100);     // 半径（长轴和短轴）
+        //    double angle = 0;        // 椭圆旋转角度
+        //    double startAngle = 30;  // 起始角度
+        //    double endAngle   = 120; // 结束角度
+        //    Scalar color(0, 0, 255); // 红色
+        //    int thickness = -1;      // -1 表示填充
+        //
+        //    // 画扇形
+        //    ellipse(img, center, axes, angle, startAngle, endAngle, color, thickness);
+        //
+        int offset = center_offset ? .5 * zoom_ratio_ : 0;
+        int round_x = round(x1*zoom_ratio_), round_y = round(y1*zoom_ratio_);
+        cv::ellipse(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset),
+                    cv::Size(radius*zoom_ratio_, radius*zoom_ratio_),
+                    0, start_angle*180./M_PI, end_angle*180./M_PI,
+                    color, line_width, cv::LINE_AA);
+
+    }
+
+    void Canvas::drawEclipse(float x, float y, float radius, float start_angle, float end_angle,
+                     bool center_offset, int line_width,
+                     const cv::Scalar &color) {
+        Pointf<2> pti = transformToPixel(x, y);
+        float radius_i = radius * resolution_;
+        drawEclipseInt(pti[0], pti[1], radius_i, -end_angle, -start_angle, center_offset, line_width, color);
+        Pointf<2> start_ptf, end_ptf;
+        start_ptf[0] = x + radius*cos(start_angle);
+        start_ptf[1] = y + radius*sin(start_angle);
+
+        end_ptf[0] = x + radius*cos(end_angle);
+        end_ptf[1] = y + radius*sin(end_angle);
+
+        drawLine(x, y, start_ptf[0], start_ptf[1], std::max(1, line_width), center_offset, color);
+        drawLine(x, y, end_ptf[0],   end_ptf[1],   std::max(1, line_width), center_offset, color);
+
+    }
+
+    void Canvas::drawCircleFloat(float x, float y, float radius, bool center_offset, int line_width,
+                                 const cv::Scalar &color, float weight) {
         int offset = center_offset ? .5 * zoom_ratio_ : 0;
         int round_x = round(x*zoom_ratio_), round_y = round(y*zoom_ratio_);
-        cv::circle(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset), radius, color, line_width, cv::LINE_AA);
+        cv::circle(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset),
+                   radius*zoom_ratio_, color, line_width, cv::LINE_AA);
     }
 
     void Canvas::resetCanvas(const cv::Scalar &color) {

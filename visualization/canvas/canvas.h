@@ -49,6 +49,14 @@ namespace freeNav {
         void drawCircle(float x1, float y1, float radius, bool center_offset = true, int line_width = 1,
                         const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
+        void drawEclipseInt(float x1, float y1, float radius, float start_angle, float end_angle,
+                         bool center_offset = true, int line_width = 1,
+                         const cv::Scalar &color = cv::Scalar(0, 0, 0));
+
+        void drawEclipse(float x1, float y1, float radius, float start_angle, float end_angle,
+                         bool center_offset = true, int line_width = 1,
+                         const cv::Scalar &color = cv::Scalar(0, 0, 0));
+
         void drawArrow(float x, float y, double theta, double arrow_length, int line_width = 1, bool center_offset = true,
                        const cv::Scalar &color = cv::Scalar::all(0));
 

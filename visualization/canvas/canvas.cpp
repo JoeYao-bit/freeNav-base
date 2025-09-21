@@ -104,18 +104,18 @@ namespace freeNav {
             cv::Mat temp_copy(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(0));
             cv::Mat background_copy = canvas_.clone();
             // draw transparent shapes
-            cv::circle(temp_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+            cv::circle(temp_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius * zoom_ratio_,
                        color, line_width, cv::LINE_AA);
             cv::Mat middle;
             cv::addWeighted(background_copy, 1.-weight, temp_copy, weight, 0, middle);
             // dig a hole in the background
-            cv::circle(background_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+            cv::circle(background_copy, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius * zoom_ratio_,
                        cv::Vec3b::all(0), line_width, cv::LINE_AA);
             // use a background to keep other content no change
             cv::addWeighted(background_copy, weight, middle, 1, 0, canvas_);
 
         } else {
-            cv::circle(canvas_, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius,
+            cv::circle(canvas_, cv::Point(x * zoom_ratio_, y * zoom_ratio_) + cv::Point(offset, offset), radius * zoom_ratio_,
                        color, line_width, cv::LINE_AA);
         }
     }

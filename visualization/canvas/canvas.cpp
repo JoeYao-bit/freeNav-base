@@ -129,6 +129,7 @@ namespace freeNav {
     void Canvas::drawCircle(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color) {
         Pointf<2> pti = transformToPixel(x, y);
         float radius_i = radius * resolution_;
+        std::cout << "radius_i = " << radius_i << std::endl;
         drawCircleFloat(pti[0], pti[1], radius_i, center_offset, line_width, color);
     }
 

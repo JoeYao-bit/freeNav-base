@@ -46,6 +46,9 @@ namespace freeNav {
 
         void drawCircleFloat(float x, float y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0), float weight = 1.0);
 
+        void drawRectangleFloat(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
+                                bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
+
         void drawCircleInt(const Fraction& x, const Fraction& y, float radius, bool center_offset = true, int line_width = 1, const cv::Scalar &color = cv::Scalar(0, 0, 0));
 
         void drawCircle(float x1, float y1, float radius, bool center_offset = true, int line_width = 1,

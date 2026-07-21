@@ -126,6 +126,8 @@ namespace freeNav {
         cv::circle(canvas_, cv::Point(round_x, round_y) + cv::Point(offset, offset), radius, color, line_width, cv::LINE_AA);
     }
 
+
+
     void Canvas::drawCircle(float x, float y, float radius, bool center_offset, int line_width, const cv::Scalar &color) {
         Pointf<2> pti = transformToPixel(x, y);
         float radius_i = radius * resolution_;
@@ -192,6 +194,27 @@ namespace freeNav {
                    radius*zoom_ratio_, color, line_width, cv::LINE_AA);
     }
 
+    void Canvas::drawRectangleFloat(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
+                                    bool center_offset, int line_width, const cv::Scalar &color) {
+        if(center_offset) {
+            x1 = (x1 + .5) * zoom_ratio_; y1 = (y1 + .5) * zoom_ratio_;
+            x2 = (x2 + .5) * zoom_ratio_; y2 = (y2 + .5) * zoom_ratio_;
+            x3 = (x3 + .5) * zoom_ratio_; y3 = (y3 + .5) * zoom_ratio_;
+            x4 = (x4 + .5) * zoom_ratio_; y4 = (y4 + .5) * zoom_ratio_;
+        } else {
+            x1 = x1 * zoom_ratio_; y1 = y1 * zoom_ratio_;
+            x2 = x2 * zoom_ratio_; y2 = y2 * zoom_ratio_;
+            x3 = x3 * zoom_ratio_; y3 = y3 * zoom_ratio_;
+            x4 = x4 * zoom_ratio_; y4 = y4 * zoom_ratio_;
+        }
+
+        cv::line(canvas_, cv::Point2i(x1, y1), cv::Point2i(x2, y2), color, line_width, cv::LINE_AA);
+        cv::line(canvas_, cv::Point2i(x2, y2), cv::Point2i(x3, y3), color, line_width, cv::LINE_AA);
+        cv::line(canvas_, cv::Point2i(x3, y3), cv::Point2i(x4, y4), color, line_width, cv::LINE_AA);
+        cv::line(canvas_, cv::Point2i(x4, y4), cv::Point2i(x1, y1), color, line_width, cv::LINE_AA);
+
+    }
+
     void Canvas::resetCanvas(const cv::Scalar &color) {
         canvas_ = cv::Mat(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(255));
     }
@@ -234,12 +257,12 @@ namespace freeNav {
         drawArrow(x_range, 0., 0., .5, 1, true, cv::Scalar::all(0));
         drawArrow(0., y_range, M_PI_2, .5, 1, true, cv::Scalar::all(0));
 
-        for (double i = ceil(-x_range + 1); i <= floor(x_range); i++) {
+        for (double i = ceil(-x_range); i <= floor(x_range); i++) {
             if (i == 0) continue;
             drawLine(i, -wing_length, i, wing_length, 1, true, cv::Scalar::all(0));
         }
 
-        for (double i = ceil(-y_range + 1); i <= floor(y_range); i++) {
+        for (double i = ceil(-y_range); i <= floor(y_range); i++) {
             if (i == 0) continue;
             drawLine(-wing_length, i, wing_length, i, 1, true, cv::Scalar::all(0));
         }

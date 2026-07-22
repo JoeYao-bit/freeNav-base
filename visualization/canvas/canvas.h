@@ -163,14 +163,14 @@ namespace freeNav {
             v[1] = center_[1] - y * resolution_;
             return v;
         }
-        void setMouseCallBack(void (*func)(int, int, int, int, void *));
+        void setMouseCallBack(void (*func)(int, float, float, int, void *));
 
         /* default FPS set to 30 */
         int show(int ms = 33);
 
         double zoom_ratio_ = 1;
 
-        void (*mouse_call_back_func_)(int, int, int, int, void *) = nullptr;
+        void (*mouse_call_back_func_)(int, float, float, int, void *) = nullptr;
 
         cv::Mat getCanvas() { return canvas_; }
 

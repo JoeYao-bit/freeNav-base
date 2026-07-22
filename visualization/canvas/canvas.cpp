@@ -228,8 +228,8 @@ namespace freeNav {
 
     void canvasMouseCallBack(int event, int x, int y, int flags, void *canvas) {
         Canvas *canvas_ptr = reinterpret_cast<Canvas *>(canvas);
-        int x_zoomed = x / canvas_ptr->zoom_ratio_;
-        int y_zoomed = y / canvas_ptr->zoom_ratio_;
+        float x_zoomed = x / canvas_ptr->zoom_ratio_;
+        float y_zoomed = y / canvas_ptr->zoom_ratio_;
         if (canvas_ptr->mouse_call_back_func_ != nullptr) {
             (*(canvas_ptr->mouse_call_back_func_))(event, x_zoomed, y_zoomed, flags, nullptr);
         } else {
@@ -239,7 +239,7 @@ namespace freeNav {
     }
 
 
-    void Canvas::setMouseCallBack(void (*func)(int, int, int, int, void *)) {
+    void Canvas::setMouseCallBack(void (*func)(int, float, float, int, void *)) {
         mouse_call_back_func_ = func;
         cv::setMouseCallback(name_, canvasMouseCallBack, this);
     }

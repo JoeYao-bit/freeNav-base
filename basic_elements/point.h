@@ -337,6 +337,14 @@ namespace freeNav {
             return val;
         }
 
+        Point<float, N> toFloat() const {
+            Point<float, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] = val_[i];
+            }
+            return val;
+        }
+
         void insert(T val, unsigned int index) {
             std::vector<T>::insert(this->begin() + index, val);
         }

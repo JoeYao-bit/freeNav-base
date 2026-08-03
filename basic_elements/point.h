@@ -176,6 +176,14 @@ namespace freeNav {
             return val;
         }
 
+        float operator*(const Point<float, N> &pt) const {
+            float val(0);
+            for (uint i = 0; i < N; i++) {
+                val += val_[i] * pt[i];
+            }
+            return val;
+        }
+
         Point<double, N> multi(const double f) const {
             Point<double, N> val;
             for (uint i = 0; i < N; i++) {

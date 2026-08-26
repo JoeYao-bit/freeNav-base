@@ -148,7 +148,7 @@ namespace freeNav {
 
         void resetCanvas(const cv::Scalar &color = cv::Scalar(255, 255, 255));
 
-        Pointd<2> transformToWorld(const Pointi<2> &pt);
+        Pointf<2> transformToWorld(const Pointf<2> &pt);
 
 
         template <typename T>

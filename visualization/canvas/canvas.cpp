@@ -219,8 +219,8 @@ namespace freeNav {
         canvas_ = cv::Mat(canvas_.rows, canvas_.cols, CV_8UC3, cv::Scalar::all(255));
     }
 
-    Pointd<2> Canvas::transformToWorld(const Pointi<2> &pt) {
-        Pointd<2> v;
+    Pointf<2> Canvas::transformToWorld(const Pointf<2> &pt) {
+        Pointf<2> v;
         v[0] = (pt[0] - center_[0]) / resolution_;
         v[1] = -(pt[1] - center_[1]) / resolution_;
         return v;

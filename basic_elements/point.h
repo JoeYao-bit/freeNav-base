@@ -649,8 +649,8 @@ namespace freeNav {
     using IS_OCCUPIED_FUNC = std::function<bool(const Pointi<N>&)>;
 
     // if the line is collision free, return true, otherwise false
-    template <Dimension N>
-    using IS_LINE_COLLISION_FREE_FUNC = std::function<bool(const Pointi<N>&, const Pointi<N>&)>;
+    template <typename T, Dimension N>
+    using IS_LINE_COLLISION_FREE_FUNC = std::function<bool(const Point<T, N>&, const Point<T, N>&)>;
 
     template <Dimension N>
     using SET_OCCUPIED_FUNC = std::function<void(const Pointi<N>&)>;

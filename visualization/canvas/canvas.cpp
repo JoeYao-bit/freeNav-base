@@ -493,10 +493,11 @@ namespace freeNav {
     }
 
     void Canvas::draw_Block(const freeNav::Pointi<2>& min_pt, const freeNav::Pointi<2>& max_pt) {
-        drawLineInt(min_pt[0], min_pt[1], min_pt[0], max_pt[1], false);
-        drawLineInt(min_pt[0], min_pt[1], max_pt[0], min_pt[1], false);
-        drawLineInt(min_pt[0], max_pt[1], max_pt[0], max_pt[1], false);
-        drawLineInt(max_pt[0], min_pt[1], max_pt[0], max_pt[1], false);
+        freeNav::Pointi<2> max_pt_ = Pointi<2>{1,1};
+        drawLineInt(min_pt[0],  min_pt[1],  min_pt[0],  max_pt_[1], false);
+        drawLineInt(min_pt[0],  min_pt[1],  max_pt_[0], min_pt[1], false);
+        drawLineInt(min_pt[0],  max_pt_[1], max_pt_[0], max_pt_[1], false);
+        drawLineInt(max_pt_[0], min_pt[1],  max_pt_[0], max_pt_[1], false);
     }
 
     void Canvas::drawEmptyGrid() {

@@ -353,6 +353,14 @@ namespace freeNav {
             return val;
         }
 
+        Point<int, N> toInt() const {
+            Point<int, N> val;
+            for (uint i = 0; i < N; i++) {
+                val[i] = round(val_[i]);
+            }
+            return val;
+        }
+
         void insert(T val, unsigned int index) {
             std::vector<T>::insert(this->begin() + index, val);
         }
@@ -371,7 +379,7 @@ namespace freeNav {
     };
 
 
-
+    template<typename T, Dimension N> using Points = std::vector<Point<T, N>>;
     template <Dimension N> using Pointi = Point<int, N>;
     template <Dimension N> using PointF = Point<Fraction, N>;
     template <Dimension N> using Pointf = Point<float, N>;
@@ -559,17 +567,17 @@ namespace freeNav {
     }
 
     // Line is temporary data type, so no access to space are contained
-    template <Dimension N>
+    template <typename T, Dimension N>
     struct Line
     {
         // construct a line that connect the two points
         // the first line is first add to the path
         // first and second CANNOT be the same point
-        explicit Line(const Pointi<N> &first, const Pointi<N> &second) {
+        explicit Line(const Point<T, N> &first, const Point<T, N> &second) {
             if(first==second) {
                 exit(0);
             }
-            int devia(0);
+            T devia(0);
             for(uint i=0; i<N; i++) {
                 if(devia < abs(second[i] - first[i])) {
                     devia = abs(second[i] - first[i]);
@@ -597,6 +605,17 @@ namespace freeNav {
             double k = (base - parameter[dimension_index].first)/parameter[dimension_index].second;
             for(uint i=0; i<parameter.size(); i++) {
                 pt[i] = round(parameter[i].second*k + parameter[i].first);
+            }
+            return pt;
+        }
+
+        Pointf<N> GetPointFloat(Id index) {
+            double base = start + index * step_length;
+            Pointf<N> pt;
+            // y = k*x + b -> line equation
+            double k = (base - parameter[dimension_index].first)/parameter[dimension_index].second;
+            for(uint i=0; i<parameter.size(); i++) {
+                pt[i] = parameter[i].second*k + parameter[i].first;
             }
             return pt;
         }
@@ -840,7 +859,7 @@ namespace freeNav {
 
     template <Dimension N>
     bool ObstacleNearbyCheck(const Pointi<N>& pt,
-                             const Line<N>& line,
+                             const Line<int, N>& line,
                              const Pointi<N> &first,
                              const Pointi<N> &second,
                              IS_OCCUPIED_FUNC<N> is_occupied,
@@ -868,7 +887,7 @@ namespace freeNav {
     template <Dimension N>
     bool LineCrossInCubic(const Pointi<N>& pt,
                           const Pointi<N>& pt1, const Pointi<N>& pt2,
-                          const Line<N>& line,
+                          const Line<int, N>& line,
                           const Pointis<N-1>& neighbor,
                           IS_OCCUPIED_FUNC<N> is_occupied
                           ) {
@@ -906,7 +925,7 @@ namespace freeNav {
     template <Dimension N>
     bool LineCrossObstacle(const Pointi<N>& pt1, const Pointi<N>& pt2, IS_OCCUPIED_FUNC<N> is_occupied, const Pointis<N-1>& neighbor) {
         if(pt1 == pt2) return true;
-        Line<N> line(pt1, pt2);
+        Line<int, N> line(pt1, pt2);
         int check_step = line.step;
         Pointi<N> pt;
         for(int i=1; i<check_step; i++) {
@@ -919,14 +938,14 @@ namespace freeNav {
     }
 
     /* does work like a continues way */
-    template <Dimension N>
-    Pointis<N> lineTraversal(const Pointi<N>& pt1, const Pointi<N>& pt2) {
-        Pointis<N> retv;
+    template <typename T, Dimension N>
+    Points<T, N> lineTraversal(const Point<T, N>& pt1, const Point<T, N>& pt2) {
+        Points<T, N> retv;
         if(pt1 == pt2) {
             retv.push_back(pt1);
             return retv;
         }
-        Line<N> line(pt1, pt2);
+        Line<int, N> line(pt1, pt2);
         Pointis<N> neighbor = GetNeightborOffsetGrids<N>();
         int check_step = line.step;
         retv.push_back(pt1);

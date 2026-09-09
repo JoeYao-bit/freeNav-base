@@ -31,6 +31,10 @@ namespace freeNav {
 
         DimensionLength dimen_[N];
 
+        std::vector<Pointi<N> > occ_pts_;
+
+        std::set<Id> occ_pt_ids_;
+
         /* the editable map */
         //GridMap grid_map_; // storage the whole map take too many space
 

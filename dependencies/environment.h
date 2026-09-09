@@ -27,8 +27,6 @@ namespace freeNav {
             return dimen_;
         }
 
-    protected:
-
         DimensionLength dimen_[N];
 
         std::vector<Pointi<N> > occ_pts_;

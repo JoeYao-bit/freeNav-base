@@ -35,13 +35,6 @@ message ( STATUS "Python3_FOUND = ${Python3_FOUND} " )
 message ( STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS} " )
 message ( STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES} " )
 
-include_directories(${OpenCV_INCLUDE_DIRS})
-include_directories(${YAML_CPP_INCLUDE_DIR})
-include_directories(${CGAL_INCLUDE_DIRS})
-include_directories(${Python3_INCLUDE_DIRS})
-include_directories(${argparse_INCLUDE_DIRS})
-
-
 
 include_directories(
         #SYSTEM

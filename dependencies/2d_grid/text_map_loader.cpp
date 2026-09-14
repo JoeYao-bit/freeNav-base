@@ -50,6 +50,16 @@ namespace freeNav {
                 grid_map_[(i-4)*dimen_[0]+j] = f1(lines[i][j]) ? GridState::OCCUPIED : GridState::FREE;
             }
         }
+        int id = 0;
+        for(int i=0; i<dimen_[0]; i++) {
+            for(int j=0; j<dimen_[1]; j++) {
+                id = i*dimen_[0] + j;
+                if(grid_map_[id] == GridState::OCCUPIED) {
+                    occ_pt_ids_.insert(id);
+                    occ_pts_.push_back(Pointi<2>{i, j});
+                }
+            }
+        }
     }
 
     bool TextMapLoader::isOccupied(const Pointi<2> & pt) const {

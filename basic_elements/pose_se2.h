@@ -8,7 +8,11 @@
 #include <eigen3/Eigen/Core>
 #include <iostream>
 #include <g2o/stuff/misc.h>
+<<<<<<< HEAD
 
+=======
+#include <vector>
+>>>>>>> main
 
 
 /**
